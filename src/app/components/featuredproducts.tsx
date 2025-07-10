@@ -46,7 +46,7 @@ export default function ProductCarousel({ products }: Props) {
           <div key={product.id} className="px-2">
             <Link href={`/singleproduct/${product.id}`}>
               <div className="bg-white rounded shadow hover:shadow-lg transition duration-300 p-4">
-                <div className="h-[200px] md:h-[250px] lg:h-[300px] mb-4 relative">
+                <div className="h-[200px] md:h-[250px] lg:h-[350px] mb-4 relative">
                   <Image
                     src={product.image}
                     alt={product.name}
