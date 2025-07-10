@@ -10,16 +10,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
   const [showDropdown, setShowDropdown] = useState(false);
 
-    useEffect(() => {
-      if (status === 'loading') return;
-      if (!session || session.user.role !== 'ADMIN') {
-        router.replace('/authorize/login');
-      }
-    }, [session, status, router]);
-
-    if (status === 'loading') {
-      return <div>Loading...</div>;
+  useEffect(() => {
+    if (status === 'loading') return;
+    if (!session || session.user.role !== 'ADMIN') {
+      router.replace('/authorize/login');
     }
+  }, [session, status, router]);
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex min-h-screen">
@@ -31,18 +31,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               href="/authorize/admin/category"
               className="block px-2 py-1 hover:bg-gray-200 rounded"
             >
-               Category
+              Category
             </Link>
           </li>
-
           <li>
             <div
               className="relative block px-4 py-1 hover:bg-gray-200 rounded cursor-pointer"
               onClick={() => setShowDropdown(prev => !prev)}
             >
-             {showDropdown ?
-             <FiChevronUp className='absolute left-0 top-1.5'/>:
-             <FiChevronDown className='absolute left-0 top-1.5'/>} Product 
+              {showDropdown ?
+                <FiChevronUp className='absolute left-0 top-1.5' /> :
+                <FiChevronDown className='absolute left-0 top-1.5' />} Product
             </div>
 
             {showDropdown && (
@@ -61,6 +60,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </Link>
               </div>
             )}
+          </li>
+          <li>
+            <Link
+              href="/authorize/admin/shipment"
+              className="block px-2 py-1 hover:bg-gray-200 rounded"
+            >
+              Shipement
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/authorize/admin/pricefilter"
+              className="block px-2 py-1 hover:bg-gray-200 rounded"
+            >
+              Price filter
+            </Link>
           </li>
         </ul>
       </aside>

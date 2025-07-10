@@ -1,7 +1,9 @@
 'use client';
 
 export default function Shopbutton({ product }: { product: any }) {
+  
   const addttoCart = () => {
+   
     const storedCart = localStorage.getItem('cart');
     const cart = storedCart ? JSON.parse(storedCart) : [];
 
@@ -10,9 +12,15 @@ export default function Shopbutton({ product }: { product: any }) {
       const updatedCart = [...cart, {
         id: product.id,
         name: product.name,
-        image: product.image
+        image: product.image,
+        price:product.price,
+        Qty:1,
+        total:product.price * 1
       }];
       localStorage.setItem('cart', JSON.stringify(updatedCart));
+      
+      window.dispatchEvent(new Event('cartChanged'));
+    
     }
   };
   
@@ -20,7 +28,7 @@ export default function Shopbutton({ product }: { product: any }) {
     <div className="">
       <button
         type="button"
-        className="bg-green-500 px-3 py-1 text-sm text-white"
+        className="bg-green-500 px-3 py-1 text-sm text-white cursor-pointer"
         onClick={addttoCart}
         >
         

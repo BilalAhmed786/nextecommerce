@@ -3,7 +3,8 @@ const prisma = new PrismaClient();
 import fs from 'fs';
 import path from 'path';
 import { MyContext } from '../route';
-import multer from 'multer';
+import { unauthorized } from 'next/navigation';
+
 const uploadDir = path.join(process.cwd(), 'public', 'uploads');
 
 export const productresolvers = {
@@ -37,11 +38,18 @@ export const productresolvers = {
 
 
     },
-    
+
 
 
     categories: async () => {
       return await prisma.category.findMany();
+    },
+
+    shipments: async () => {
+      return await prisma.shippingRate.findMany();
+    },
+    pricefilter: async () => {
+      return await prisma.priceFilter.findMany();
     },
 
   },
@@ -164,15 +172,15 @@ export const productresolvers = {
 
 
       try {
-        
-          const findproduct = await prisma.product.findFirst({
-            where:{name}
-          })
 
-          if(findproduct){
+        const findproduct = await prisma.product.findFirst({
+          where: { name }
+        })
 
-            return {message:'product already exist'}
-          }
+        if (findproduct) {
+
+          return { message: 'product already exist' }
+        }
 
 
         const product = await prisma.product.create({
@@ -290,9 +298,9 @@ export const productresolvers = {
 
         return { message: 'unauthorize user' }
       }
-     
+
       const { id } = args
-     
+
       try {
 
         const result = await prisma.product.delete({
@@ -310,16 +318,16 @@ export const productresolvers = {
 
     },
 
-    deleteGalleryImage: async (_: any, args: { id: string },context:MyContext) => {
+    deleteGalleryImage: async (_: any, args: { id: string }, context: MyContext) => {
 
-      
+
       if (context.user?.role !== "ADMIN") {
 
         return { message: 'unauthorize user' }
       }
 
       const { id } = args
-      console.log(id)
+
       try {
 
         const image = await prisma.productImage.findUnique({
@@ -347,9 +355,153 @@ export const productresolvers = {
 
 
 
+    },
+
+    createShipment: async (_: any, args: { city: string; amount: number }, context: MyContext) => {
+
+      if (context.user?.role !== "ADMIN") {
+
+        return { message: 'unauthorize user' }
+      }
+
+
+      try {
+
+        const { city, amount } = args
+
+        if (!city || !amount) {
+
+          return { message: "all fields required" }
+        }
+        const result = await prisma.shippingRate.create({
+          data: {
+            city: args.city,
+            amount: args.amount,
+          },
+        });
+
+        return { shipment: result }
+      } catch (error) {
+        console.log(error)
+      }
+
+    },
+    updateShipment: async (_: any, args: { id: string; city: string; amount: number }) => {
+
+      const { id, city, amount } = args
+
+      if (!city || !amount) {
+
+        return { message: 'all fields required' }
+      }
+
+      try {
+        const result = await prisma.shippingRate.update({
+          where: { id },
+          data: {
+            city: city,
+            amount: amount,
+          },
+        });
+
+        return { shipment: result }
+      } catch (error) {
+
+        console.log(error)
+      }
+
+    },
+    deleteShipment: async (_: any, args: { id: string }) => {
+
+      await prisma.shippingRate.delete({ where: { id: args.id } });
+      return true;
+    },
+    createPriceFilter: async (_: any, args: { range: string }, context: MyContext) => {
+      if (context.user?.role !== 'ADMIN') {
+
+        return { message: 'unauthorized' }
+      }
+
+      const {range } = args
+
+      if (!range) {
+
+        return { message: 'field is required' }
+      }
+
+      try {
+
+        const result = await prisma.priceFilter.create({
+          data: { amount:range }
+        })
+
+        return { pricerange: result }
+
+      } catch (error) {
+
+        console.log(error)
+      }
+
+
+
+
+    },
+    updatePriceFilter: async (_: any, args: { id: string; range: string }, context: MyContext) => {
+      if (context.user?.role !== 'ADMIN') {
+        return { message: 'unauthorized' };
+      }
+
+      const { id, range } = args;
+
+      if (!id || !range) {
+        return { message: 'all fields are required' };
+      }
+
+      try {
+        const existing = await prisma.priceFilter.findUnique({ where: { id } });
+
+        if (!existing) {
+          return { message: 'Price range not found' };
+        }
+
+        const result = await prisma.priceFilter.update({
+          where: { id },
+          data: { amount:range },
+        });
+
+        return { pricerange: result };
+      } catch (error) {
+        console.error(error);
+        return { message: 'Something went wrong' };
+      }
+    },
+    
+    deletePriceFilter: async (_: any, args: { id: string }, context: MyContext) => {
+      if (context.user?.role !== 'ADMIN') {
+        return false;
+      }
+
+      const { id } = args;
+
+      if (!id) {
+        return false;
+      }
+
+      try {
+        const existing = await prisma.priceFilter.findUnique({ where: { id } });
+
+        if (!existing) {
+          return false;
+        }
+
+        await prisma.priceFilter.delete({ where: { id } });
+
+        return true;
+      } catch (error) {
+        console.error(error);
+
+      }
     }
-
-
 
 
 

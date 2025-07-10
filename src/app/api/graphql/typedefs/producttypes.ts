@@ -21,6 +21,14 @@ export const producttypes = /* GraphQL */`
     message: String
   }
 
+  
+  type ProductImage {
+    id: String
+    url: String
+    alt: String
+    productId: String
+  }
+
   type Category {
     id: String
     name: String
@@ -31,16 +39,31 @@ export const producttypes = /* GraphQL */`
     message: String
   }
 
+  type Shipment {
+  id: ID!
+  city: String!
+  amount: Float!
+}
 
-  type ProductImage {
-    id: String
-    url: String
-    alt: String
-    productId: String
-  }
+type shippingrateWithvalid{
 
-  
-  input CreateProductInput {
+shipment:Shipment
+message:String
+
+}
+
+type PriceFilter {
+  id: ID!
+  amount:String
+}
+
+type PriceFilterwithvalid{
+
+  pricerange:PriceFilter
+  message:String
+}
+
+ input CreateProductInput {
     name: String!
     description: String!
     price: Float!
@@ -61,20 +84,51 @@ export const producttypes = /* GraphQL */`
   images: [String]
 }
 
+ 
+
+
+
+
   type Query {
+    # for product
     products: [Product!]!
     getSingleproduct(id:String!):Product
+    
+    # for category
     categories:[Category!]!
+    
+    # for shipment
+
+    shipments: [Shipment!]!
+
+    #price filter
+
+    pricefilter:[PriceFilter!]!
+
+
   }
 
   type Mutation {
+    # for product
     createProduct(input: CreateProductInput): ProductWithValid
     deleteProduct(id:String!):ProductWithValid
     updateProduct(input:UpdateProductInput):ProductWithValid
+    deleteGalleryImage(id:String!):CategoryWithValid
+    # for category
     createCategory(name: String!): CategoryWithValid!
     deleteCategory(id: String!): CategoryWithValid!
     upateCategory(id:String!,name:String!):CategoryWithValid!
-    deleteGalleryImage(id:String!):CategoryWithValid
+    
+    # for shipment
+    createShipment(city: String!, amount: Float!): shippingrateWithvalid!
+    updateShipment(id: ID!, city: String!, amount: Float!):shippingrateWithvalid!
+    deleteShipment(id: ID!): Boolean!
+
+    #price filter
+    createPriceFilter(range: String!): PriceFilterwithvalid!
+    updatePriceFilter(id: ID!, range: String!): PriceFilterwithvalid!
+    deletePriceFilter(id: ID!): Boolean!
+  
 
   }
 

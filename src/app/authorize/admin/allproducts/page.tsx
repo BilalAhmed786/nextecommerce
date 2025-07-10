@@ -20,7 +20,7 @@ export default function ProductTable() {
         try {
             const { data } = await deleteProduct({ variables: { id } });
 
-            console.log(data)
+
         } catch (err) {
             console.error(err);
             alert('Failed to delete product.');
@@ -31,8 +31,8 @@ export default function ProductTable() {
     const filteredProducts = data?.products?.filter((product: any) =>
         product.name.toLowerCase().includes(search.toLowerCase()) ||
         product.category.name.toLowerCase().includes(search.toLowerCase())
-        
-    ) 
+
+    )
 
     const columns = [
         {
@@ -60,19 +60,21 @@ export default function ProductTable() {
         },
         {
             name: 'Image',
+
             cell: (row: any) => (
                 <img
                     src={row.image}
-                    className="w-20 rounded"
+                    className="w-20 m-2 rounded"
                     alt="Main"
                 />
             ),
+
         },
         {
             name: 'Gallery',
             cell: (row: any) => (
                 <div
-                 className="flex gap-2 flex-wrap">
+                    className="flex gap-2 flex-wrap">
                     {row.images.map((img: any, i: number) => (
                         <img
                             key={i}
@@ -110,13 +112,15 @@ export default function ProductTable() {
 
     return (
         <div className="p-4">
-            <input
-                type="text"
-                placeholder="Search products..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="mb-4 px-3 py-2 border rounded w-full max-w-md"
-            />
+            
+                <input
+                    type="text"
+                    placeholder="Search products..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="mb-11 px-3 py-2 border w-full rounded"
+                />
+            
 
             <DataTable
                 columns={columns}

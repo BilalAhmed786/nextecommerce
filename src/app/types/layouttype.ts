@@ -4,6 +4,7 @@ export type ProductFormProps = {
 };
 
 export type ProductFormData = {
+  id:string;
   name: string;
   description?: string;
   price: number;
@@ -24,4 +25,13 @@ export interface Props {
    
     
   }>;
+}
+
+export interface CartItem {
+  id: string;
+  name: string;
+  image: string;
+  price: number;
+  Qty: number;
+  total: number;
 }

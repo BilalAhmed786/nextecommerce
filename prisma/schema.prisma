@@ -1,7 +1,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  
 }
 
 datasource db {
@@ -20,7 +19,6 @@ model User {
 
   // Relations
   orders    Order[]
-  cartItems CartItem[]
   addresses Address[]
 }
 
@@ -38,7 +36,6 @@ model Product {
 
   // Relations
   orderItems  OrderItem[]
-  cartItems   CartItem[]
   images      ProductImage[]  
 }
 
@@ -61,15 +58,19 @@ model Order {
   id         String      @id @default(cuid())
   user       User?        @relation(fields: [userId], references: [id])
   userId     String?
+  subtotal   Float
+  shippingCost Float
   total      Float
   status     OrderStatus @default(PENDING)
   createdAt  DateTime    @default(now())
   address    Address   @relation(fields: [addressId], references: [id])
   addressId  String
-  
-  //relation
+  payment    Paymentmode
+
+  // relation
   orderItems OrderItem[]
 }
+
 //many to many relation b/w order and product
 model OrderItem {
   id        String   @id @default(cuid())
@@ -81,19 +82,14 @@ model OrderItem {
   price     Float
 }
 
-model CartItem {
-  id        String   @id @default(cuid())
-  user      User?     @relation(fields: [userId], references: [id])
-  userId    String?
-  product   Product  @relation(fields: [productId], references: [id])
-  productId String
-  quantity  Int
-}
+
 
 model Address {
   id         String   @id @default(cuid())
   user       User?     @relation(fields: [userId], references: [id])
   userId     String?
+  name       String
+  email      String
   street     String
   city       String
   state      String
@@ -102,6 +98,19 @@ model Address {
   isDefault  Boolean  @default(false)
   orders Order[]
 }
+
+model ShippingRate {
+  id     String @id @default(cuid())
+  city   String @unique
+  amount Float
+}
+
+model PriceFilter{
+  id     String @id @default(cuid())
+  amount String
+
+}
+
 
 enum Role {
   ADMIN
@@ -113,4 +122,11 @@ enum OrderStatus {
   SHIPPED
   DELIVERED
   CANCELLED
+}
+
+enum Paymentmode {
+
+  STRIPE
+  COD
+
 }

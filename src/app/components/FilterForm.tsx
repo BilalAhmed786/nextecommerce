@@ -2,6 +2,7 @@
 import { useSearchParams } from 'next/navigation';
 
 export default function FilterForm({ categories, priceRanges }: any) {
+  
   const searchParams = useSearchParams();
   const selectedCategory = searchParams?.get('category') || '';
   const selectedPrice = searchParams?.get('price') || '';
@@ -16,7 +17,7 @@ export default function FilterForm({ categories, priceRanges }: any) {
               type="radio"
               name="category"
               value={cat.id}
-              defaultChecked={selectedCategory === cat.id}
+              
             />
             {cat.name}
           </label>
@@ -25,15 +26,15 @@ export default function FilterForm({ categories, priceRanges }: any) {
 
       <div>
         <h2 className="font-semibold mb-2">Price</h2>
-        {priceRanges.map(({ label, value }: any) => (
-          <label key={value} className="flex items-center gap-2 mb-1">
+        {priceRanges.pricefilter.map((label:any, index:number) => (
+          <label key={index} className="flex items-center gap-2 mb-1">
             <input
               type="radio"
               name="price"
-              value={value}
-              defaultChecked={selectedPrice === value}
+              value={label.amount}
+              
             />
-            {label}
+              ${label.amount}
           </label>
         ))}
       </div>

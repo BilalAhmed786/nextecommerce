@@ -92,7 +92,7 @@ query{
 }
 `
 
-export const getsingle_product = gql `
+export const getsingle_product = gql`
 
 query($id:String!){
 
@@ -166,3 +166,86 @@ export const deletegallery_image = gql`
       
   }
 `;
+
+
+export const get_shipments = gql`
+  query GetShipments {
+    shipments {
+      id
+      city
+      amount
+    }
+  }
+`;
+
+export const create_shipment = gql`
+  mutation CreateShipment($city: String!, $amount: Float!) {
+    createShipment(city: $city, amount: $amount) {
+    shipment{
+      id
+      city
+      amount
+    }
+    message
+    }
+  }
+`;
+
+export const update_shipment = gql`
+  mutation UpdateShipment($id: ID!, $city: String!, $amount: Float!) {
+    updateShipment(id: $id, city: $city, amount: $amount) {
+      shipment{
+        id
+        city
+        amount
+      }
+      message
+    }
+  }
+`;
+
+export const delete_shipment = gql`
+  mutation DeleteShipment($id: ID!) {
+    deleteShipment(id: $id)
+  }
+`;
+
+export const get_price_filter = gql`
+  query GetPriceFilters {
+    pricefilter {
+      id
+      amount
+    }
+  }
+`;
+
+export const create_price_filter = gql`
+  mutation CreatePriceFilter($range: String!) {
+    createPriceFilter(range: $range) {
+      pricerange {
+        id
+        amount
+      }
+      message
+    }
+  }
+`;
+
+export const update_price_filter = gql`
+  mutation UpdatePriceFilter($id: ID!, $range: String!) {
+    updatePriceFilter(id: $id, range: $range) {
+      pricerange {
+        id
+        amount
+      }
+      message
+    }
+  }
+`;
+
+export const delete_price_filter = gql`
+  mutation DeletePriceFilter($id: ID!) {
+    deletePriceFilter(id: $id)
+  }
+`;
+
