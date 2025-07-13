@@ -18,15 +18,15 @@ export default function ProductSlider({ images }: Props) {
   };
 
   return (
-    <div className="w-[320px] md:w-[600px] lg:w-[600px] mt-5">
+    <div className="w-[320px] md:w-[750px] lg:w-[1000px]">
      <Slider {...settings}>
         {images.map((img, i) => (
-          <div key={i} className="h-[500px] md:h-[600px] lg:h-[700px] relative">
+          <div key={i} className="h-[500px] md:h-[600px] lg:h-[600px] relative">
             <Image
               src={img}
               alt={`img-${i}`}
               fill
-              className="object-contain"
+              className="object-center"
               
             />
           </div>

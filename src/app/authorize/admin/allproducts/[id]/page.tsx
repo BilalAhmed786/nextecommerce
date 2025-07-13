@@ -170,7 +170,7 @@ export default function EditProductForm() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-4 space-y-4 bg-white shadow rounded">
+    <form onSubmit={handleSubmit} className="max-w-2xl mt-20 mx-auto p-4 space-y-4 bg-white shadow rounded">
       <h2 className="text-xl font-semibold text-center">Update Product</h2>
 
       <input type="text" name="name" value={formValues.name} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Name" />

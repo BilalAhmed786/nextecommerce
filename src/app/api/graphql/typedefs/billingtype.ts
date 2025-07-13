@@ -60,6 +60,11 @@ type Query {
   userOrders(userId: String!): [Order!]!
 }
 
+type Mutation{
+
+   updateOrderStatus(id: String!, status: OrderStatus!): Order
+}
+
 `
 
 

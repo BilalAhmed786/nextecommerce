@@ -45,7 +45,7 @@ export default function CartPage() {
   const grandTotal = cartItems.reduce((sum, item) => sum + item.total, 0);
 
   return (
-    <div className="p-4 sm:p-6">
+    <div className="p-4 sm:p-6 mt-20">
       <h1 className="text-2xl font-semibold mb-4 text-center sm:text-left">Your Cart</h1>
 
       {cartItems.length === 0 ? (

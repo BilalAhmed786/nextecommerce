@@ -2,13 +2,15 @@
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const LoginPage = () => {
+
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [validation, setValidation] = useState('');
   const router = useRouter();
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -31,6 +33,10 @@ const LoginPage = () => {
       console.error(error);
     }
   };
+
+
+
+ 
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-gray-100">
@@ -70,6 +76,7 @@ const LoginPage = () => {
           >
             Sign In
           </button>
+          forget password? <Link className='underline text-blue-500' href='/forgetpassword'>Forget password</Link>
         </form>
       </div>
     </div>

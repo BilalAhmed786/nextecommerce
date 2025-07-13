@@ -3,7 +3,9 @@
 import { useQuery, useMutation } from '@apollo/client';
 import { get_products, delete_product } from '@/app/graphql/product';
 import { useState } from 'react';
-import DataTable from 'react-data-table-component';
+import Reactdatatable from '../../components/datatable';
+import Searchdatatable from '../../components/searchdatatable';
+import { FiEdit, FiTrash } from 'react-icons/fi';
 import Link from 'next/link';
 
 export default function ProductTable() {
@@ -94,13 +96,13 @@ export default function ProductTable() {
                         href={`allproducts/${row.id}`}
                         className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
                     >
-                        Edit
+                        <FiEdit/>
                     </Link>
                     <button
                         onClick={() => handleDelete(row.id)}
                         className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
                     >
-                        Delete
+                        <FiTrash/>
                     </button>
                 </div>
             ),
@@ -111,25 +113,20 @@ export default function ProductTable() {
     if (error) return <p className="p-4">Error loading products.</p>;
 
     return (
-        <div className="p-4">
-            
-                <input
-                    type="text"
-                    placeholder="Search products..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="mb-11 px-3 py-2 border w-full rounded"
-                />
-            
+        <div>
 
-            <DataTable
-                columns={columns}
-                data={filteredProducts}
-                pagination
-                highlightOnHover
-                striped
-                responsive
-            />
+            <div className='w-full mt-25'>
+
+                <Searchdatatable search={setSearch} />
+
+            </div>
+
+            <div>
+
+                <Reactdatatable columns={columns} filterproducts={filteredProducts} />
+
+            </div>
+
         </div>
     );
 }

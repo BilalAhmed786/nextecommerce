@@ -1,7 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import DataTable from 'react-data-table-component';
+import Searchdatatable from '../../components/searchdatatable';
+import Reactdatatable from '../../components/datatable';
+import { FiEdit, FiTrash } from 'react-icons/fi';
+
 import {
     get_price_filter,
     create_price_filter,
@@ -89,13 +92,13 @@ const PriceFilterPage = () => {
                         }}
                         className="bg-blue-500 text-white px-2 py-1 rounded"
                     >
-                        Edit
+                        <FiEdit/>
                     </button>
                     <button
                         onClick={() => handleDelete(row.id)}
                         className="bg-red-500 text-white px-2 py-1 rounded"
                     >
-                        Delete
+                        <FiTrash/>
                     </button>
                 </div>
             ),
@@ -103,9 +106,9 @@ const PriceFilterPage = () => {
     ];
 
     return (
-        <div className="max-w-2xl mx-auto p-6">
-            <div className='flex justify-between mx-14'>
-                <h2 className="text-2xl font-bold mb-4">Manage Price Ranges</h2>
+        <div className="w-full p-6 mt-20">
+            <div className='block w-[75%] m-auto text-center relative'>
+                <h2 className="text-lg font-bold mb-4">Manage Price Ranges</h2>
                 {editId &&
                  
                  <button
@@ -115,6 +118,7 @@ const PriceFilterPage = () => {
                     setValid('')
 
                  }}
+                 className='absolute top-1.5 right-0 px-1 border-1 text-xs rounded-full'
                  >X
                  </button>
                 
@@ -122,7 +126,7 @@ const PriceFilterPage = () => {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+            <form onSubmit={handleSubmit} className="w-[75%] m-auto space-y-3">
                 <input
                     type="text"
                     value={range}
@@ -131,37 +135,17 @@ const PriceFilterPage = () => {
                     className="border p-2 w-full rounded"
                 />
                 <div>
-                    {valid ? <div className='text-red-600'>{valid}</div> : ''}
+                    {valid ? <div className='text-red-600 text-center'>{valid}</div> : ''}
                 </div>
-                <button className="bg-green-600 text-white px-4 py-2 rounded">
+                <button className="block m-auto bg-green-600  text-white px-4 py-2 rounded">
                     {editId ? 'Update' : 'Add'}
                 </button>
             </form>
 
-            {/* Search */}
-            <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search price ranges..."
-                className="border p-2 rounded w-full mb-4"
-            />
-
-            {/* Table */}
-            {loading ? (
-                <p>Loading...</p>
-            ) : error ? (
-                <p className="text-red-500">Error loading data</p>
-            ) : (
-                <DataTable
-                    title="Price Filter List"
-                    columns={columns}
-                    data={filteredData}
-                    pagination
-                    striped
-                    highlightOnHover
-                />
-            )}
+           
+            <Searchdatatable search={setSearch}/>
+            <Reactdatatable columns={columns} filterproducts={filteredData}/>
+           
         </div>
     );
 };

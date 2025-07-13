@@ -111,7 +111,7 @@ export default function ProductForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 p-6 w-[70%] bg-white shadow rounded mx-auto"
+      className="space-y-4 p-6 w-[80%] rounded mx-auto mt-20"
     >
       <h2 className="text-xl font-semibold mb-4 text-center">Create Product</h2>
 
@@ -242,10 +242,10 @@ export default function ProductForm() {
           </div>
         )}
       </div>
-       {validation ? <div className='text-red-500'>{validation}</div>:""}
+       {validation ? <div className='text-red-500 text-center'>{validation}</div>:""}
       <button
         type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        className="block m-auto bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
       >
         Submit
       </button>

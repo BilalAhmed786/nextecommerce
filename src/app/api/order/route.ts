@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { PrismaClient } from '@prisma/client';
-import { sendOrderEmail } from '@/nodemailer/mailer';
+import { sendOrderEmail } from '@/nodemailer/orderplace';
 
 const prisma = new PrismaClient();
 

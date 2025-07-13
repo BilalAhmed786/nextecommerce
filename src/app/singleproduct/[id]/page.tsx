@@ -32,7 +32,7 @@ const featuredproducts = allproducts.products.filter((product:any)=>product.id !
   const gallery = [product.image, ...product.images.map((g: any) => g.url)];
 
   return (
-    <div className='flex flex-col justify-center items-center gap-4 mb-10'>
+    <div className='flex flex-col justify-center items-center gap-4 mb-10 mt-20'>
       <ProductSlider images={gallery} />
       <div className=''>
         <h1 className="text-2xl font-bold text-center mb-5">{product.name}</h1>

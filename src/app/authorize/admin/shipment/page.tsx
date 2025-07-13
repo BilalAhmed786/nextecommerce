@@ -1,7 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import DataTable from 'react-data-table-component';
+import Reactdatatable from '../../components/datatable';
+import Searchdatatable from '../../components/searchdatatable';
+import { FiDelete, FiEdit, FiTrash } from 'react-icons/fi';
+
+
 import {
   get_shipments,
   create_shipment,
@@ -103,13 +107,13 @@ const ShipmentPage = () => {
             }}
             className="bg-blue-500 text-white px-2 py-1 rounded"
           >
-            Edit
+            <FiEdit/>
           </button>
           <button
             onClick={() => handleDelete(row.id)}
             className="bg-red-500 text-white px-2 py-1 rounded"
           >
-            Delete
+            <FiTrash/>
           </button>
         </div>
       ),
@@ -117,19 +121,21 @@ const ShipmentPage = () => {
   ];
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
-      <div className='flex justify-between mx-14'>
-        <h2 className="text-2xl font-bold mb-4">Add Shipment</h2>
+    <div className="w-full p-4 mt-20">
+      <div className='block w-[80%] m-auto relative'>
+        <h2 className="text-2xl text-center font-bold mb-4">{editId ? 'Update shipment':'Add shipment'}</h2>
         {editId ? <button onClick={()=>{
           setEditId(null)
           setCity('')
           setAmount('')
+          
         }}
+        className='absolute border-1 right-1 top-2 text-xs px-1 rounded-full'
         >X</button>:''}
       </div>
 
 
-      <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+      <form onSubmit={handleSubmit} className="w-[75%] m-auto space-y-4 mb-6">
 
         <div>
           <label className="block font-semibold">City</label>
@@ -151,35 +157,21 @@ const ShipmentPage = () => {
             placeholder="Enter Amount"
           />
         </div>
-        {valid ? <div>{valid}</div> : ""}
+        {valid ? <div className='text-center text-red-500'>{valid}</div> : ""}
         <button
           type="submit"
-          className="bg-green-600 text-white px-4 py-2 rounded"
+          className="block bg-green-600 m-auto text-white px-4 py-2 rounded"
         >
           {editId ? 'Update' : 'Add'}
         </button>
       </form>
 
-      <h3 className="text-xl font-semibold mb-2">Shipment List</h3>
-        <input 
-        className='w-[90%] h-10 rounded-2xl border-1 px-3 outline-0' 
-        placeholder='search city..' 
-        type="text"
-        onChange={(e)=>searchitem(e.target.value)}
-        />
-      {loading ? 
-        <p>Loading...</p>
-       : error ? 
-        <p className="text-red-500">Error loading shipments</p>
-       : 
-        <DataTable
-          columns={columns}
-          data={filterdata}
-          pagination
-          highlightOnHover
-          striped
-        />
-      }
+      <h3 className="text-2xl text-center font-semibold mb-2">Shipment List</h3>
+      
+        <Searchdatatable search={searchitem}/>
+
+        <Reactdatatable columns={columns} filterproducts={filterdata}/>
+        
     </div>
   );
 };

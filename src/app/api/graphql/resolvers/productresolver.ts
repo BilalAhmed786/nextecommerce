@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 import fs from 'fs';
 import path from 'path';
 import { MyContext } from '../route';
-import { unauthorized } from 'next/navigation';
+
 
 const uploadDir = path.join(process.cwd(), 'public', 'uploads');
 
@@ -21,7 +21,7 @@ export const productresolvers = {
     },
     getSingleproduct: async (_: any, args: { id: string }) => {
       const { id } = args
-      console.log(id)
+      
       try {
 
         const result = await prisma.product.findUnique({

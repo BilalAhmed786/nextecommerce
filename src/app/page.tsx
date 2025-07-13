@@ -64,7 +64,7 @@ export default async function ShopPage({ searchParams }: Props) {
   return (
 
 
-    <div className="flex m-5">
+    <div className="flex m-5 mt-20">
       
       <aside className="hidden w-64 md:hidden lg:block h-screen">
         <Link className='block mb-5 w-[80%] m-auto' href={'http://localhost:3000'}><FiRefreshCcw/></Link>

@@ -1,8 +1,9 @@
 'use client'
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
-import { register_user } from "../../graphql/user";
+import { register_user } from "../graphql/user";
 import { useRouter } from "next/navigation";
+
 
 interface FormData {
   name: string;
@@ -22,10 +23,11 @@ const RegisterPage: React.FC = () => {
   const [registerUser] = useMutation(register_user);
   const [validation,setValidation]= useState('')
 
+  
 
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
+  setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
@@ -58,6 +60,7 @@ const RegisterPage: React.FC = () => {
 
 
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

@@ -35,3 +35,18 @@ export interface CartItem {
   Qty: number;
   total: number;
 }
+
+export interface DatatableProps{
+  filterproducts: any;
+  columns: any;
+};
+
+export interface Orders{
+  id: string;
+  user: { name: string; email: string };
+  subtotal: number;
+  total: number;
+  shippingCost: number;
+  payment: string;
+  status: string;
+};

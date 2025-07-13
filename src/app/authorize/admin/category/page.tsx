@@ -3,8 +3,9 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { create_category, delete_category, get_category, update_category } from '@/app/graphql/product';
 import { useState } from 'react';
-import DataTable from 'react-data-table-component';
-
+import Searchdatatable from '../../components/searchdatatable';
+import Reactdatatable from '../../components/datatable';
+import { FiEdit, FiTrash } from 'react-icons/fi';
 export default function CategoryPage() {
   const [createCat] = useMutation(create_category);
   const [deleteCat] = useMutation(delete_category);
@@ -104,13 +105,13 @@ export default function CategoryPage() {
             }} // Replace with edit logic
             className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            Edit
+            <FiEdit/>
           </button>
           <button
             onClick={() => handleDelete(row.id)}
             className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
           >
-            Delete
+           <FiTrash/>
           </button>
         </div>
       ),
@@ -123,16 +124,16 @@ export default function CategoryPage() {
 
   return (
 
-    <div className="w-full flex flex-col items-center px-4">
+    <div className="w-full flex flex-col items-center mt-20">
       {!editvalue.id ?
         <>
-          <h1 className="text-xl font-bold mb-4">Create Category</h1>
+          <h1 className="block font-semibold w-full text-2xl text-center m-5">Create Category</h1>
 
-          <form onSubmit={handleForm} className="flex flex-col items-center space-y-4 w-[55%]">
+          <form onSubmit={handleForm} className="w-full flex flex-col items-center space-y-4">
             <input
               type="text"
               placeholder="Category Name"
-              className="w-full border px-3 py-2 rounded"
+              className="w-[76%] h-12 border rounded p-3"
               onChange={(e) => setCategory(e.target.value)}
               value={category}
             />
@@ -146,10 +147,10 @@ export default function CategoryPage() {
         </>
         :
         <>
-          <div className='w-full flex justify-evenly'>
-            <h1 className="text-xl font-bold mb-4">Update Category</h1>
+          <div className='flex justify-evenly relative'>
+            <h1 className="font-semibold w-full text-2xl text-center m-5">Update Category</h1>
             <button
-              className='-mt-2 cursor-pointer'
+              className='absolute top-6 -left-7 cursor-pointer border-1 px-1 rounded-full text-xs'
               onClick={() => {
                 setEditvalue({ id: '', name: '' })
                 setValid('')
@@ -158,13 +159,13 @@ export default function CategoryPage() {
             </button>
           </div>
 
-          <form onSubmit={handleupdateForm} className="flex flex-col items-center space-y-4 w-[55%]">
+          <form onSubmit={handleupdateForm} className="w-full flex flex-col items-center space-y-4 rounded">
 
             <input
               type="text"
               placeholder="Category Name"
               name='name'
-              className="w-full border px-3 py-2 rounded"
+              className="w-[76%] border px-3 py-2 rounded h-12 outline-0"
               value={editvalue.name}
               onChange={changeCategory}
             />
@@ -177,28 +178,13 @@ export default function CategoryPage() {
         </>
       }
 
-      {/* Search bar */}
-      <div className="mt-8 mb-4 w-[55%]">
-        <input
-          type="text"
-          placeholder="Search category..."
-          className="w-full border px-3 py-2 rounded"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
+     <div className='w-full'>
+        <Searchdatatable search={setSearch}/>
+    </div>
 
       {/* Data table */}
-      <div className="flex flex-col items-center">
-        <DataTable
-          title=""
-          columns={columns}
-          data={filteredData || []}
-          progressPending={loading}
-          pagination
-          highlightOnHover
-          striped
-        />
+      <div className="w-full">
+        <Reactdatatable columns={columns} filterproducts={filteredData}/>
       </div>
     </div>
   );
