@@ -205,10 +205,8 @@ export const userresolver = {
                     return { message: 'All fields required', success: false };
                 }
 
-                console.log('token',token)
                 const decoded = jwt.verify(token, process.env.JWT_SEC as string) as JwtPayload;
 
-                console.log('verify',decoded)
                 if(!decoded){
 
                     return {message :'token expired try again', success: false }
