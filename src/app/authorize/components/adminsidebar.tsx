@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 
-const sidebar = () => {
+const adminsidebar = () => {
 
     const [showDropdown, setShowDropdown] = useState(false);
     const [toggle, setToggle] = useState(false)
@@ -11,7 +11,7 @@ const sidebar = () => {
     return (
 
         <div className='min-h-full mt-20'>
-            <aside className={`w-64 p-4 bg-gray-100 min-h-full fixed top-0 z-50 trans transition-trans duration-500 ease-in ${toggle ? 'translate-x-0' : '-translate-x-full'}`}
+            <aside className={`w-64 text-white p-4 size-18 bg-radial-[at_99%_100%] from-sky-400 via-blue-500 to-blue-600 to-15% min-h-full fixed top-0 z-50 trans transition-trans duration-500 ease-in ${toggle ? 'translate-x-0' : '-translate-x-full'}`}
             >
 
                 <button className='absolute right-3 border-1 px-1 text-xs rounded-full'
@@ -28,14 +28,14 @@ const sidebar = () => {
                     <li>
                         <Link
                             href="/authorize/admin/category"
-                            className="block px-2 py-1 hover:bg-gray-200 rounded"
+                            className="block px-2 py-1 hover:bg-gray-700 rounded"
                         >
                             Category
                         </Link>
                     </li>
                     <li>
                         <div
-                            className="relative block px-4 py-1 hover:bg-gray-200 rounded cursor-pointer"
+                            className="relative block px-4 py-1 hover:bg-gray-700 rounded cursor-pointer"
                             onClick={() => setShowDropdown(prev => !prev)}
                         >
                             {showDropdown ?
@@ -47,13 +47,13 @@ const sidebar = () => {
                             <div className="ml-4 mt-2 space-y-2">
                                 <Link
                                     href="/authorize/admin/product"
-                                    className="block px-2 py-1 hover:bg-gray-200 rounded"
+                                    className="block px-2 py-1 hover:bg-gray-700 rounded"
                                 >
                                     Create Product
                                 </Link>
                                 <Link
                                     href="/authorize/admin/allproducts"
-                                    className="block px-2 py-1 hover:bg-gray-200 rounded"
+                                    className="block px-2 py-1 hover:bg-gray-700 rounded"
                                 >
                                     All Products
                                 </Link>
@@ -63,7 +63,7 @@ const sidebar = () => {
                     <li>
                         <Link
                             href="/authorize/admin/shipment"
-                            className="block px-2 py-1 hover:bg-gray-200 rounded"
+                            className="block px-2 py-1 hover:bg-gray-700 rounded"
                         >
                             Shipement
                         </Link>
@@ -71,7 +71,7 @@ const sidebar = () => {
                     <li>
                         <Link
                             href="/authorize/admin/pricefilter"
-                            className="block px-2 py-1 hover:bg-gray-200 rounded"
+                            className="block px-2 py-1 hover:bg-gray-700 rounded"
                         >
                             Price filter
                         </Link>
@@ -79,7 +79,7 @@ const sidebar = () => {
                     <li>
                         <Link
                             href="/authorize/admin/orders"
-                            className="block px-2 py-1 hover:bg-gray-200 rounded"
+                            className="block px-2 py-1 hover:bg-gray-700 rounded"
                         >
                             Orders
                         </Link>
@@ -87,7 +87,7 @@ const sidebar = () => {
                     <li>
                         <Link
                             href="/authorize/admin/user"
-                            className="block px-2 py-1 hover:bg-gray-200 rounded"
+                            className="block px-2 py-1 hover:bg-gray-700 rounded"
                         >
                             Users
                         </Link>
@@ -95,7 +95,7 @@ const sidebar = () => {
                      <li>
                         <Link
                             href="/authorize/admin/resetpassword"
-                            className="block px-2 py-1 hover:bg-gray-200 rounded"
+                            className="block px-2 py-1 hover:bg-gray-700 rounded"
                         >
                             Reset Password
                         </Link>
@@ -115,4 +115,4 @@ const sidebar = () => {
     )
 }
 
-export default sidebar
+export default adminsidebar

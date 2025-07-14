@@ -3,6 +3,7 @@ import { MyContext } from "../route"
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import { PrismaClient, Role } from "@prisma/client"
 import { forgetpasswordLink } from "@/nodemailer/forgetpassword"
+import Email from "next-auth/providers/email"
 const prisma = new PrismaClient()
 
 export const userresolver = {
@@ -198,7 +199,7 @@ export const userresolver = {
 
             return 'Reset link has been sent to your email';
         },
-      
+
         resetPassword: async (_: any, { token, newPassword }: { token: string; newPassword: string }) => {
             try {
                 if (!token || !newPassword) {
@@ -207,9 +208,9 @@ export const userresolver = {
 
                 const decoded = jwt.verify(token, process.env.JWT_SEC as string) as JwtPayload;
 
-                if(!decoded){
+                if (!decoded) {
 
-                    return {message :'token expired try again', success: false }
+                    return { message: 'token expired try again', success: false }
                 }
 
                 const userId = decoded.id;
@@ -227,12 +228,14 @@ export const userresolver = {
                 };
             } catch (err) {
                 console.error(err);
-                 return {
-                  message: 'Invalid or expired token',
-                 success: false,
-               };
+                return {
+                    message: 'Invalid or expired token',
+                    success: false,
+                };
 
             }
-        }
+        },
+        
+
     }
 }

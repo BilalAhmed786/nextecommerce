@@ -57,8 +57,8 @@ const MobileNavbar = () => {
         {/* Dashboard (based on role) */}
         {session?.user?.role === 'ADMIN' && (
           <Link
-            href="/authorize/admin/allproducts"
-            className="text-center border-b border-gray-300 pb-2 text-gray-700 hover:text-black"
+            href="/authorize/admin/dashboard"
+            className="w-full text-center border-b border-gray-300 pb-2 text-gray-700 hover:text-black"
           >
             Dashboard
           </Link>
@@ -66,7 +66,7 @@ const MobileNavbar = () => {
 
         {session?.user?.role === 'CUSTOMER' && (
           <Link
-            href="/authorize/client/allproducts"
+            href="/authorize/client/dashboard"
             className="text-center border-b border-gray-300 pb-2 text-gray-700 hover:text-black"
           >
             Dashboard
@@ -91,7 +91,7 @@ const MobileNavbar = () => {
           </>
         ) : (
           <button
-            onClick={() => signOut({ callbackUrl: '/authorize/login' })}
+            onClick={() => signOut({ callbackUrl: '/login' })}
             className="w-full text-center border-b border-gray-300 pb-2 text-gray-700 hover:text-black"
           >
             Logout

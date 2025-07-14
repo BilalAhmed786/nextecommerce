@@ -26,6 +26,7 @@ export const get_single_order = gql`
       total
       status
       payment
+      createdAt
      
       address {
         name
@@ -37,6 +38,7 @@ export const get_single_order = gql`
       orderItems {
         product {
           name
+          image 
         }
         quantity
         price
@@ -54,3 +56,18 @@ export const update_order_status = gql`
     }
   }
 `;
+
+export const order_by_email = gql`
+query OrdersByEmail($email: String!) {
+  userOrders(email: $email) {
+    id
+    total
+    status
+    payment
+    createdAt
+    address {
+      name
+      email
+    }
+  }
+}`

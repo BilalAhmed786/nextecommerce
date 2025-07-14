@@ -1,5 +1,5 @@
 'use client';
-import { signIn } from 'next-auth/react';
+import { signIn,getSession} from 'next-auth/react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -24,11 +24,31 @@ const LoginPage = () => {
         password: formData.password,
       });
 
-      if (res?.error) {
-        setValidation(res.error);
-      } else {
-        router.push('/authorize/admin/product');
-      }
+        if(res?.ok){
+
+      const session = await getSession();
+      
+      const role = session?.user?.role;
+
+          if(role === "ADMIN"){
+
+            router.push('/authorize/admin/dashboard')
+          
+          }else if(role === "CUSTOMER"){
+
+            router.push('/authorize/client/dashboard')
+
+          }
+
+
+        }else{
+          if(res?.error){
+              
+            setValidation(res?.error)
+          }
+        }
+
+      
     } catch (error) {
       console.error(error);
     }

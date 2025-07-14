@@ -1,4 +1,4 @@
-import { PrismaClient,OrderStatus } from '@prisma/client';
+import { PrismaClient, OrderStatus } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -15,6 +15,7 @@ export const orderResolvers = {
                 },
             });
         },
+
         order: async (_: any, args: { id: string }) => {
             return prisma.order.findUnique({
                 where: { id: args.id },
@@ -27,9 +28,13 @@ export const orderResolvers = {
                 },
             });
         },
-        userOrders: async (_: any, args: { userId: string }) => {
+        userOrders: async (_: any, args: { email: string }) => {
             return prisma.order.findMany({
-                where: { userId: args.userId },
+                where: {
+                    address: {
+                        email: args.email,
+                    },
+                },
                 include: {
                     address: true,
                     orderItems: {
@@ -40,13 +45,13 @@ export const orderResolvers = {
         },
     },
 
-    Mutation:{
-         updateOrderStatus: async (_: any, { id, status }: { id: string, status: OrderStatus }) => {
-         return await prisma.order.update({
-        where: { id },
-        data: { status },
-      });
-    },
+    Mutation: {
+        updateOrderStatus: async (_: any, { id, status }: { id: string, status: OrderStatus }) => {
+            return await prisma.order.update({
+                where: { id },
+                data: { status },
+            });
+        },
     }
 
 };

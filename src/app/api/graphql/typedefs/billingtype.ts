@@ -57,7 +57,8 @@ enum Paymentmode {
 type Query {
   orders: [Order!]!
   order(id: ID!): Order
-  userOrders(userId: String!): [Order!]!
+  userOrders(email:String!): [Order!]!
+  
 }
 
 type Mutation{

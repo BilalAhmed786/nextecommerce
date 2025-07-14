@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 const shopsearchform = () => {
 
   return (
-    <div className='mb-10 w-full'>
+    <div className='mb-5 mt-5 w-full'>
       <form method="get" className="">
         <div className='flex w-full'>
           <input

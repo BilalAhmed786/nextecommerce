@@ -19,8 +19,8 @@ const mediafilter = ({ categories, priceRanges }: any) => {
           className={`fixed bg-white transition-transform duration-500 ease-in-out transform
       ${toggle ? 'translate-x-0' : '-translate-x-full'} p-10 block lg:hidden h-screen top-0 left-0 z-50`}
         >
-          <button className="absolute right-2 border-1 rounded-full px-1 text-xs" onClick={() => settoggle(false)}>X</button>
-          <Link className="block mb-5 underline text-blue-500" href={'http://localhost:3000'}>
+          <button className="absolute right-2 border-1 top-1 rounded-full px-1 text-xs" onClick={() => settoggle(false)}>X</button>
+          <Link className="absolute top-1 right-10  mb-5 underline text-blue-500" href={'http://localhost:3000'}>
           <FaSyncAlt/>
           </Link>
           <Shopsearchform/>

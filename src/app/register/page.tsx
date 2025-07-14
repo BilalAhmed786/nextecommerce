@@ -38,16 +38,17 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
     try{
 
-        const result = await registerUser({
+        const {data} = await registerUser({
 
             variables:formData
         })
-        if(result.data.registerUser.message){
+        if(data.registerUser.message){
 
-          setValidation(result.data.registerUser.message)
+          setValidation(data.registerUser.message)
         }else{
         
-            router.push('/authorize/login')
+
+            router.push('/login')
 
         }
 

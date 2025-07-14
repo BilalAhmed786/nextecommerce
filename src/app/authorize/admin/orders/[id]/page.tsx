@@ -37,8 +37,13 @@ export default function OrderDetailPage() {
   const order = data.order;
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-white shadow rounded-md mt-20">
-      <h1 className="text-2xl font-bold mb-6 text-blue-700">Order #{order.id}</h1>
+    <div className="w-[80%] mx-auto p-6 bg-white shadow rounded-md mt-20">
+      <h1 className="text-xs font-bold mb-6 text-blue-700">Order #{order.id}</h1>
+       <p><strong>Placed On:</strong>{' '}
+          {order.createdAt && !isNaN(Number(order.createdAt))
+            ? new Date(Number(order.createdAt)).toLocaleDateString()
+          : 'N/A'}
+        </p>
 
       {/* Order Summary */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -55,8 +60,8 @@ export default function OrderDetailPage() {
               className="border px-4 py-2 rounded"
               disabled={updatingStatus}
             >
-              {statusOptions.map((status) => (
-                <option key={status} value={status}>
+              {statusOptions.map((status,index) => (
+                <option key={index} value={status}>
                   {status.charAt(0) + status.slice(1).toLowerCase()}
                 </option>
               ))}

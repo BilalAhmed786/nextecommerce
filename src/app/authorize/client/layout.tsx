@@ -1,5 +1,6 @@
+
 'use client';
-import Sidebar from '../components/adminsidebar';
+import Sidebar from '../components/clientsidebar';
 
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -10,8 +11,6 @@ return (
       
       <Sidebar/>
       <main>{children}</main>
-      
-     
     </div>
   );
 }

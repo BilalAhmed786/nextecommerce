@@ -8,7 +8,7 @@ export default function Header() {
   const { data: session, status } = useSession();
 
   return (
-    <header className="bg-blue-600 text-white py-4 w-full">
+    <header className="h-14 bg-linear-to-t from-sky-600 to-indigo-700 text-white py-4 w-full">
       <div className="flex w-full justify-between items-center px-5">
         <h2 className="text-sm md:text-sm lg:text-2xl font-bold">Thrifters point</h2>
 
@@ -35,7 +35,7 @@ export default function Header() {
           {session?.user?.role === 'ADMIN' && (
             <Link
               className="font-light hover:text-green-200 hover:scale-110 transition-transform duration-200"
-              href="/authorize/admin/allproducts"
+              href="/authorize/admin/dashboard"
             >
               Dashboard
             </Link>
@@ -44,7 +44,7 @@ export default function Header() {
           {session?.user?.role === 'CUSTOMER' && (
             <Link
               className="font-light hover:text-green-200 hover:scale-110 transition-transform duration-200"
-              href="/authorize/client/allproducts"
+              href="/authorize/client/dashboard"
             >
               Dashboard
             </Link>
