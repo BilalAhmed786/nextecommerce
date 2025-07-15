@@ -39,8 +39,9 @@ export default function ProductCarousel({ products }: Props) {
   };
 
   return (
-    <div className="w-[320px] md:[w-600px] lg:w-[1000px]  px-2 mt-10">
-      <h1 className='text-2xl font-bold text-center mb-5'>Featured products</h1>
+      <>
+      <h1 className='text-2xl font-bold text-center m-10'>Featured products</h1>
+    <div className="w-[320px] md:[w-600px] lg:w-[1000px] m-auto  px-2 mt-10">
       <Slider {...settings}>
         {products.map((product) => (
           <div key={product.id} className="px-2">
@@ -64,5 +65,7 @@ export default function ProductCarousel({ products }: Props) {
         ))}
       </Slider>
     </div>
+
+    </>
   );
 }
