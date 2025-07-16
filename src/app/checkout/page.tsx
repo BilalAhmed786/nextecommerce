@@ -2,20 +2,27 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
 import { CartItem } from '../types/layouttype';
 import { loadStripe } from '@stripe/stripe-js';
 import { useQuery, useMutation } from '@apollo/client';
-import { get_shipments } from '../graphql/product';
+import { get_shipments} from '../graphql/product';
+import { get_address } from '../graphql/orders';
 import axios from 'axios';
-const stripePromise = loadStripe('pk_test_51NcvwgKgFXig68gS6L70mmG6mn6OYPuyBgpMbqQtRtEwfhvfzjU8Emuh8kHJn9U512rxYValI8Jn6MUxoUtf3D2B00k8kkT6Im');
 
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 export default function CheckoutPage() {
+  
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [guestName, setGuestName] = useState('');
   const [guestEmail, setGuestEmail] = useState('');
   const { data } = useQuery(get_shipments);
   const [paymentMethod, setPaymentMethod] = useState('');
   const [shippingCost, setShippingCost] = useState(0);
+  const { data: session, status } = useSession()
+  const { data:useraddress } = useQuery(get_address, { variables: { email: session?.user.email }, skip: !session?.user.email })
+
   const [address, setAddress] = useState({
     street: '',
     city: '',
@@ -30,6 +37,24 @@ export default function CheckoutPage() {
     const cart = storedCart ? JSON.parse(storedCart) : [];
     setCartItems(cart);
   }, []);
+
+  useEffect(()=>{
+  
+    const address = useraddress?.address
+    setGuestEmail(address?.email || '')
+    setGuestName(address?.name || '')
+    setAddress({
+    ...address,
+    street:address?.street || '',
+    city:address?.city || '',
+    state:address?.state || '',
+    postalCode:address?.postalCode || '',
+    country:address?.country || '',
+
+    })
+
+
+  },[useraddress])
 
   const subTotal = cartItems.reduce((sum, item) => sum + item.total, 0);
   const grandTotal = subTotal + shippingCost;

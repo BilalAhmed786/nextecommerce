@@ -71,3 +71,27 @@ query OrdersByEmail($email: String!) {
     }
   }
 }`
+
+
+export const get_address = gql`
+  query GetAddress($email: String!) {
+    address(email: $email) {
+      id
+      userId
+      name
+      email
+      street
+      city
+      state
+      postalCode
+      country
+      isDefault
+    }
+  }
+`;
+
+export const update_address = gql`
+  mutation UpdateAddress($input: orderaddress!) {
+    updateAddress(input: $input)
+  }
+`;

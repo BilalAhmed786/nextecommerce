@@ -25,6 +25,8 @@ type Address {
   orders: [Order!]!
 }
 
+
+
 type Order {
   id: ID!
   user: User
@@ -39,6 +41,17 @@ type Order {
   payment: Paymentmode!
   orderItems: [OrderItem!]!
 }
+
+input orderaddress{
+    userid:String!,
+    name:String!,
+    email:String,
+    street:String!,
+    city:String!,
+    state:String!,
+    postalCode:String!,
+    country:String!
+  }
 
 
 enum OrderStatus {
@@ -58,12 +71,15 @@ type Query {
   orders: [Order!]!
   order(id: ID!): Order
   userOrders(email:String!): [Order!]!
+  address(email:String!):Address
+  
   
 }
 
 type Mutation{
-
+   
    updateOrderStatus(id: String!, status: OrderStatus!): Order
+   updateAddress(input:orderaddress):String!
 }
 
 `

@@ -35,19 +35,18 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     <div className='mt-20 w-[80%] m-auto'>
       <div className='flex gap-4 flex-wrap justify-center'>
         <ProductSlider images={gallery} />
-          <div className='relative'>
-          <h1 className="text-2xl font-bold">{product.name}</h1>
-          <p className="w-[320px] lg:w-[450px] md:[450] m-auto text-justify mt-2">{product.description}</p>
-          <p className='left-0 absolute md:left-20 lg:left-0'>${product.price}</p>
-
-          <div className='flex mt-6 gap-4 justify-center md:justify-center lg:justify-start'>
-                Qunatity: <ProductQty product={product} />
-                <Shopbutton product={product} />
+        <div className=''>
+          <h1 className="text-xl lg:text-2xl md:text-xl lg:font-bold sm:font-medium">{product.name}</h1>
+            <p className="w-[320px] lg:w-[450px] md:[480] text-justify hyphens-auto max-w-prose mt-2">{product.description}</p>
+            <p className='mt-5'>  ${product.price}</p>
+          <div className='flex mt-6 gap-4'>
+            Qunatity: <ProductQty product={product} />
+            <Shopbutton product={product} />
           </div>
         </div>
-        </div>
-      
-      
+      </div>
+
+
 
       <div>
 

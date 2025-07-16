@@ -3,8 +3,9 @@ import ResetPasswordPage from "../../components/resetpassword"
 export default function passwordreset() {
   return (
     <div>
-      <ResetPasswordPage/>
+
+   <ResetPasswordPage/>
+
     </div>
   )
 }
-

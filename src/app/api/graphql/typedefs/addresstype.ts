@@ -1,0 +1,8 @@
+export const addresstype = /* GraphQL */ `
+
+
+
+
+
+
+`

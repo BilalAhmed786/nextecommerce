@@ -115,7 +115,7 @@ export const userresolver = {
         changePassword: async (_: any, args: { id: string; oldpassword: string; newpassword: string }, context: MyContext) => {
 
 
-            if (context.user?.role !== 'ADMIN') {
+            if (!['ADMIN', 'CUSTOMER'].includes(context.user?.role as string)) {
 
                 return { message: "unauthorize" }
 

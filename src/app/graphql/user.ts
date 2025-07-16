@@ -70,8 +70,8 @@ export const delete_user = gql `
   }
 `
 export const change_password = gql`
-  mutation ResetPassword($id:String!,$oldpassword: String!, $newpassword: String!) {
-    resetPassword(id:$id,oldpassword: $oldpassword, newpassword: $newpassword) {
+  mutation changePassword($id:String!,$oldpassword: String!, $newpassword: String!) {
+    changePassword(id:$id,oldpassword:$oldpassword, newpassword: $newpassword) {
       message
       success
     }

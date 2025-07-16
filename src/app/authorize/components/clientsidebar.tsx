@@ -43,7 +43,7 @@ const clientsidebar = () => {
                     </li>
                       <li>
                         <Link
-                            href="/authorize/client/resetpasword"
+                            href="/authorize/client/resetpassword"
                             className="block px-2 py-1 hover:bg-gray-700 rounded"
                         >
                             Reset Password
