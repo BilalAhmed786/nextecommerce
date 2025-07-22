@@ -92,7 +92,7 @@ const LoginPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300"
+            className="w-full bg-amber-600 text-white py-2 rounded-md hover:bg-amber-700 transition duration-300"
           >
             Sign In
           </button>

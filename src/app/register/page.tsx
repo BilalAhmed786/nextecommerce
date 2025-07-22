@@ -118,7 +118,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
          {validation ? <div className="text-center text-red-500">{validation}</div>:""}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+            className="w-full bg-amber-600 text-white py-2 rounded-md hover:bg-amber-700 transition"
           >
             Register
           </button>

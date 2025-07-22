@@ -10,6 +10,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
 }
 
 @media (prefers-color-scheme: dark) {
@@ -41,4 +42,10 @@ body {
 }
 .slick-next::before{
   color: #171717 !important;
+}
+
+@media (max-width: 767px) {
+  .no-lens .react-inner-image-zoom__zoom-lens {
+    display: none !important; 
+  }
 }

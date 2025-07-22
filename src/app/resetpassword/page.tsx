@@ -40,7 +40,7 @@ export default function ResetPasswordForm({searchParams}:{searchParams:Promise<{
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+            className="w-full bg-amber-600 text-white py-2 rounded hover:bg-amber-700"
           >
             {loading ? 'Updating...' : 'Update Password'}
           </button>

@@ -90,13 +90,13 @@ const PriceFilterPage = () => {
                             handleEdit(row)
                             setValid('')
                         }}
-                        className="bg-blue-500 text-white px-2 py-1 rounded"
+                        className="bg-amber-600 text-white px-2 py-1 rounded"
                     >
                         <FiEdit/>
                     </button>
                     <button
                         onClick={() => handleDelete(row.id)}
-                        className="bg-red-500 text-white px-2 py-1 rounded"
+                        className="bg-amber-500 text-white px-2 py-1 rounded"
                     >
                         <FiTrash/>
                     </button>
@@ -137,7 +137,7 @@ const PriceFilterPage = () => {
                 <div>
                     {valid ? <div className='text-red-600 text-center'>{valid}</div> : ''}
                 </div>
-                <button className="block m-auto bg-green-600  text-white px-4 py-2 rounded">
+                <button className="block m-auto bg-amber-600  text-white px-4 py-2 rounded">
                     {editId ? 'Update' : 'Add'}
                 </button>
             </form>

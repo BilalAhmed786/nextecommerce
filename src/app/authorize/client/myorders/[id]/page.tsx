@@ -28,7 +28,7 @@ export default function OrderDetailPage() {
 
     const order = data?.order;
 
-    console.log(order)
+
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center px-4 py-10">

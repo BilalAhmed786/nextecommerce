@@ -172,13 +172,13 @@ export default function AddressPage() {
 
               <button
                 onClick={handleSave}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                className="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700"
               >
                 Save
               </button>
               <button
                 onClick={handleToggleEdit}
-                className="px-4 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-500"
+                className="px-4 py-2 bg-amber-400 text-white rounded-md hover:bg-amber-500"
               >
                 Cancel
               </button>
@@ -186,7 +186,7 @@ export default function AddressPage() {
           ) : (
             <button
               onClick={handleToggleEdit}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+              className="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amberx-700"
             >
               Edit Address
             </button>

@@ -69,8 +69,8 @@ product{
 
 export const get_products = gql`
 
-query{
- products{
+query($skip:Int,$take:Int){
+ products(skip:$skip,take:$take){
   id
   name
   description

@@ -66,7 +66,7 @@ export default function UserManagement() {
       cell: (row: any) => (
         <button
           onClick={() => handleDelete(row.id)}
-          className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+          className="bg-amber-600 text-white px-3 py-1 rounded hover:bg-amber-700"
         >
           <FaRecycle/>
         </button>

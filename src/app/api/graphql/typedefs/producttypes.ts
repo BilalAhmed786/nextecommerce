@@ -91,7 +91,7 @@ type PriceFilterwithvalid{
 
   type Query {
     # for product
-    products: [Product!]!
+    products(skip: Int, take: Int): [Product!]!
     getSingleproduct(id:String!):Product
     
     # for category

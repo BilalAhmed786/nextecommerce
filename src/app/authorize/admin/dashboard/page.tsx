@@ -35,14 +35,14 @@ export default function AdminWelcomePage() {
         <div className="flex justify-center gap-4">
           <button
             onClick={() => router.push('/authorize/admin/allproducts')}
-            className="bg-amber-500 hover:bg-amber-600 px-5 py-2 rounded-md text-white shadow"
+            className="bg-amber-500 hover:bg-amber-700 px-5 py-2 rounded-md text-white shadow"
           >
             Manage Products
           </button>
 
           <button
             onClick={() => router.push('/authorize/admin/orders')}
-            className="bg-blue-500 hover:bg-blue-600 px-5 py-2 rounded-md text-white shadow"
+            className="bg-amber-600 hover:bg-amber-700 px-5 py-2 rounded-md text-white shadow"
           >
             View Orders
           </button>

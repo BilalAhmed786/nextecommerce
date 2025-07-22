@@ -65,7 +65,6 @@ model Order {
   addressId  String
   payment    Paymentmode
 
-  // relation
   orderItems OrderItem[]
 }
 

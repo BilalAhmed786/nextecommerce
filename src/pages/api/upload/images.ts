@@ -5,8 +5,8 @@ import { upload } from '@/multer/multer';
 
 const handler = nextConnect<NextApiRequest, NextApiResponse>();
 
-// Multer config: handle multiple images under 'images' key
-handler.use(upload.array('images', 10)); // max 10 images
+
+handler.use(upload.array('images', 10)); 
 
 handler.post((req: any, res: NextApiResponse) => {
   const files = req.files as Express.Multer.File[];

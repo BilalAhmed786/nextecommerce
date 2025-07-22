@@ -94,13 +94,13 @@ export default function ProductTable() {
                 <div className="flex text-xs gap-1">
                     <Link
                         href={`allproducts/${row.id}`}
-                        className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+                        className="bg-amber-600 text-white px-2 py-1 rounded hover:bg-amber-700"
                     >
                         <FiEdit/>
                     </Link>
                     <button
                         onClick={() => handleDelete(row.id)}
-                        className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                        className="bg-amber-500 text-white px-2 py-1 rounded hover:bg-amber-600"
                     >
                         <FiTrash/>
                     </button>

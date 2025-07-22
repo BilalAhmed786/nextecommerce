@@ -11,7 +11,7 @@ const clientsidebar = () => {
     return (
 
         <div className='min-h-full mt-20'>
-            <aside className={`w-64 p-4 text-white h-14 bg-linear-to-t from-sky-600 to-indigo-700 min-h-full fixed top-0 z-50 trans transition-trans duration-500 ease-in ${toggle ? 'translate-x-0' : '-translate-x-full'}`}
+            <aside className={`w-64 p-4 text-white h-14 bg-linear-to-t from-amber-600 to-amber-700 min-h-full fixed top-0 z-50 trans transition-trans duration-500 ease-in ${toggle ? 'translate-x-0' : '-translate-x-full'}`}
             >
 
                 <button className='absolute right-3 border-1 px-1 text-xs rounded-full'
@@ -62,7 +62,7 @@ const clientsidebar = () => {
                 </ul>
             </aside>
 
-            <button className='fixed top-28 -left-7 bg-red-600 text-white px-2 py-1 rotate-90  z-10'
+            <button className='fixed top-28 -left-7 bg-amber-600 text-white px-2 py-1 rotate-90  z-10'
                 onClick={() => setToggle(true)}
             >
                 Dashboard

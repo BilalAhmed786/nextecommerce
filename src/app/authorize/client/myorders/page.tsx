@@ -46,7 +46,7 @@ export default function MyOrdersPage() {
       name: 'Action',
       cell: (row: Orders) => (
         <button
-          className="text-blue-600 underline"
+          className="text-amber-600 underline"
           onClick={() => router.push(`/authorize/client/myorders/${row.id}`)}
         >
           <FaEye />

@@ -42,7 +42,7 @@ export default function WelcomePage() {
         ) : (
           <button
             onClick={() => router.push('/')}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow transition"
+            className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg shadow transition"
           >
             Start Shopping
           </button>

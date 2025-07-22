@@ -15,7 +15,7 @@ export default function EditProductForm() {
   const param = useParams();
   const id = param?.id
   const router = useRouter();
-  const { data: productData, loading,refetch } = useQuery(getsingle_product, { variables: { id } });
+  const { data: productData, loading, refetch } = useQuery(getsingle_product, { variables: { id } });
   const { data: categoryData } = useQuery(get_category);
   const [updateProduct] = useMutation(update_product);
   const [deletgalleryimg] = useMutation(deletegallery_image)
@@ -48,14 +48,13 @@ export default function EditProductForm() {
   }, [productData]);
 
 
-  //display images selected images + database images for preview
-
+ 
   function getImagePreview(image: File | dataImages) {
     return image instanceof File ? URL.createObjectURL(image) : image.url;
   }
 
 
-  //remove images
+ 
   const handleRemoveImage = async (index: number, id: string | null) => {
 
     setImagesFiles((prev) => prev.filter((_, i) => i !== index))
@@ -67,7 +66,7 @@ export default function EditProductForm() {
         variables: { id }
       })
 
-      console.log(data)
+    
 
     }
 
@@ -99,7 +98,7 @@ export default function EditProductForm() {
   const handleSubmit = async (e: React.FormEvent) => {
 
     e.preventDefault();
-    console.log(productData)
+   
 
     if (
       (!mainImageFile && !formValues.image)
@@ -107,7 +106,6 @@ export default function EditProductForm() {
       || !imagesFiles.length
       || !formValues.name
       || formValues.price === 0
-      || formValues.stock === 0
       || !formValues.description
       || !formValues.categoryId) {
 
@@ -126,13 +124,13 @@ export default function EditProductForm() {
       imageUrl = data.imageUrl;
     }
 
-    
+
     const filesOnly = imagesFiles.filter(item => item instanceof File) as File[];
 
     let galleryUrls: string[] = [];
 
     if (filesOnly.length > 0) {
-   
+
       const form = new FormData();
       filesOnly.forEach(file => form.append('images', file));
 
@@ -154,14 +152,14 @@ export default function EditProductForm() {
           }
         }
       });
-      
-      if(data.updateProduct.message){
+
+      if (data.updateProduct.message) {
 
         await refetch()
         router.push('/authorize/admin/allproducts');
       }
 
-      
+
     } catch (err) {
       console.error('Update failed', err);
     }
@@ -170,16 +168,21 @@ export default function EditProductForm() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mt-20 mx-auto p-4 space-y-4 bg-white shadow rounded">
+    <form onSubmit={handleSubmit} className="max-w-2xl mt-20 mx-auto p-4 space-y-6 bg-white shadow rounded">
       <h2 className="text-xl font-semibold text-center">Update Product</h2>
-
+      
+      <label className='font-bold'>Name</label><br />
       <input type="text" name="name" value={formValues.name} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Name" />
+      
+      <label className='font-bold'>Description</label><br />
       <textarea name="description" value={formValues.description} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Description" />
-
-      <div className="grid grid-cols-2 gap-4">
+        
+        <label className='font-bold'>Price</label><br />
         <input type="number" name="price" value={formValues.price} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Price" />
+      
+        <label className='font-bold'>Stock</label><br />
         <input type="number" name="stock" value={formValues.stock} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Stock" />
-      </div>
+      
 
       <select name="categoryId" value={formValues.categoryId} onChange={handleChange} className="w-full border p-2 rounded">
         <option value=''>Select category</option>
@@ -198,7 +201,7 @@ export default function EditProductForm() {
           :
           <div className='relative'>
             <img src={URL.createObjectURL(mainImageFile)} className="w-24 h-24 object-cover mt-2" />
-            <button className='absolute text-white top-0 bg-red-500 rounded-full px-1 text-xs cursor-pointer'
+            <button className='absolute text-white top-0 bg-amber-600 rounded-full px-1 text-xs cursor-pointer'
               onClick={() => setMainImageFile(null)}
             >
               X
@@ -216,7 +219,7 @@ export default function EditProductForm() {
             <div key={idx} className='relative'>
               <img key={idx} src={getImagePreview(img)} className="h-20 w-20 object-cover rounded" />
               <button
-                className='absolute text-white top-0 bg-red-500 rounded-full px-1 text-xs cursor-pointer'
+                className='absolute text-white top-0 bg-amber-600 rounded-full px-1 text-xs cursor-pointer'
                 onClick={() => handleRemoveImage(idx, 'id' in img ? img.id : null)}
               >
                 X
@@ -226,7 +229,7 @@ export default function EditProductForm() {
         </div>
       </div>
       {valdiation ? <div className='text-red-500 text-center'>{valdiation}</div> : ""}
-      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">
+      <button type="submit" className="bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-700 w-full">
         Update Product
       </button>
     </form>

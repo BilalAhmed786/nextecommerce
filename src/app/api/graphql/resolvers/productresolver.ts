@@ -10,10 +10,13 @@ const uploadDir = path.join(process.cwd(), 'public', 'uploads');
 export const productresolvers = {
 
   Query: {
-    products: async () => {
-
-      return await prisma.product.findMany({
-        include: {
+    products: async (_:any,args:{skip:number,take:number}) => {
+         const { skip, take } = args;
+      
+         return await prisma.product.findMany({
+          skip,
+          take,
+          include: {
           category: true,
           images: true,
         },

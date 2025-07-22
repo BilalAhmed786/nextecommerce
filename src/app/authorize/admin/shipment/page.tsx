@@ -105,13 +105,13 @@ const ShipmentPage = () => {
               setValid('')
 
             }}
-            className="bg-blue-500 text-white px-2 py-1 rounded"
+            className="bg-amber-600 text-white px-2 py-1 rounded"
           >
             <FiEdit/>
           </button>
           <button
             onClick={() => handleDelete(row.id)}
-            className="bg-red-500 text-white px-2 py-1 rounded"
+            className="bg-amber-500 text-white px-2 py-1 rounded"
           >
             <FiTrash/>
           </button>
@@ -160,7 +160,7 @@ const ShipmentPage = () => {
         {valid ? <div className='text-center text-red-500'>{valid}</div> : ""}
         <button
           type="submit"
-          className="block bg-green-600 m-auto text-white px-4 py-2 rounded"
+          className="block bg-amber-600 m-auto text-white px-4 py-2 rounded"
         >
           {editId ? 'Update' : 'Add'}
         </button>

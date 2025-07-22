@@ -245,7 +245,7 @@ export default function ProductForm() {
        {validation ? <div className='text-red-500 text-center'>{validation}</div>:""}
       <button
         type="submit"
-        className="block m-auto bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        className="block m-auto bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-700"
       >
         Submit
       </button>

@@ -1,40 +1,40 @@
 'use client';
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { change_password} from '@/app/graphql/user';
+import { change_password } from '@/app/graphql/user';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 export default function ResetPasswordPage() {
-  
   const [oldpassword, setOldpassword] = useState('');
   const [newpassword, setNewPassword] = useState('');
   const [message, setMessage] = useState('');
   const { data: session, status } = useSession();
   const [resetPassword, { loading }] = useMutation(change_password);
 
- 
+
   const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-   
-      if(!session) return
-   
+    e.preventDefault();
+
+    if (!session) return
+
 
     try {
       const { data } = await resetPassword({
         variables: {
-          id:session?.user.id,
+          id: session?.user.id,
           oldpassword,
           newpassword,
         },
       });
-      
+
       setMessage(data.changePassword?.message);
 
-      if(data.resetPassword?.message === 'Password updated successfully.'){
+      if (data.resetPassword?.message === 'Password updated successfully.') {
 
-            setNewPassword('')
-            setOldpassword('')
-            
+        setNewPassword('')
+        setOldpassword('')
+
 
       }
 
@@ -66,7 +66,7 @@ export default function ResetPasswordPage() {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          className="w-full bg-amber-600 text-white py-2 rounded hover:bg-blue-700"
           disabled={loading}
         >
           {loading ? 'Updating...' : 'Reset Password'}
@@ -74,6 +74,17 @@ export default function ResetPasswordPage() {
       </form>
 
       {message && <p className="mt-4 text-center text-red-600">{message}</p>}
+      {message === 'Incorrect old password' ? (
+        <div className="flex justify-center items-center gap-2 text-blue-700 mt-3">
+          <p className='text-lg text-black'>Forget password?</p>
+          <Link
+            className="inline-block px-4 py-2 bg-amber-600 text-white rounded"
+            href="http://localhost:3000/forgetpassword"
+          >
+           Forget password
+          </Link>
+        </div>
+      ) : null}
     </div>
   );
 }
