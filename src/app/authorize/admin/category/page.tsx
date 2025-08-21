@@ -150,7 +150,7 @@ export default function CategoryPage() {
           <div className='flex justify-evenly relative'>
             <h1 className="font-semibold w-full text-2xl text-center m-5">Update Category</h1>
             <button
-              className='absolute top-6 -left-7 cursor-pointer border-1 px-1 rounded-full text-xs'
+              className='absolute cursor-pointer -right-2 top-7 border-1 px-1 rounded-full text-xs'
               onClick={() => {
                 setEditvalue({ id: '', name: '' })
                 setValid('')

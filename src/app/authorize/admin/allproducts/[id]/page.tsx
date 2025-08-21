@@ -184,7 +184,7 @@ export default function EditProductForm() {
         <input type="number" name="stock" value={formValues.stock} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Stock" />
       
 
-      <select name="categoryId" value={formValues.categoryId} onChange={handleChange} className="w-full border p-2 rounded">
+      <select name="categoryId" value={formValues.categoryId} onChange={handleChange} className="w-[35%] border p-2 rounded">
         <option value=''>Select category</option>
         {categoryData?.categories.map((cat: any) => (
           <option key={cat.id} value={cat.id}>

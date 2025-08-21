@@ -118,7 +118,7 @@ const PriceFilterPage = () => {
                     setValid('')
 
                  }}
-                 className='absolute top-1.5 right-0 px-1 border-1 text-xs rounded-full'
+                 className='absolute top-1.5 -right-2 px-1 border-1 text-xs rounded-full'
                  >X
                  </button>
                 

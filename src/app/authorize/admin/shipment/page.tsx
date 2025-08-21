@@ -130,7 +130,7 @@ const ShipmentPage = () => {
           setAmount('')
           
         }}
-        className='absolute border-1 right-1 top-2 text-xs px-1 rounded-full'
+        className='absolute border-1 -right-1 top-2 text-xs px-1 rounded-full'
         >X</button>:''}
       </div>
 
