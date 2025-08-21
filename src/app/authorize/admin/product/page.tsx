@@ -168,7 +168,7 @@ export default function ProductForm() {
           name="categoryId"
           value={formValues.categoryId}
           onChange={handleInputChange}
-          className="w-full border px-3 py-2 rounded"
+          className="w-[40%] border px-1 py-2 rounded"
         >
           <option value="">Select a category</option>
           {data?.categories.map((cat) => (

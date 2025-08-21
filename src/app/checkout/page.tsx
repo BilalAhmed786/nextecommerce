@@ -166,7 +166,7 @@ export default function CheckoutPage() {
         />
         <select
           value={address.city}
-          className="border p-2 w-full mb-2"
+          className="border p-2 w-[35%] mb-2"
           onChange={shippingcharges}
         >
           <option value="">Select City</option>

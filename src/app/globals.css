@@ -28,6 +28,8 @@ body {
 
 
 }
+
+/* for slick slider css responsiveness */
 .slick-prev {
   left: 1% !important;
   z-index: 1;
@@ -49,3 +51,6 @@ body {
     display: none !important; 
   }
 }
+
+/* for select make responsive on all devives */
+

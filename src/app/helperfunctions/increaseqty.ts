@@ -12,7 +12,7 @@ export function increaseCartQty({id,cartItems,setValid}:Props) {
   
     
 const find = cartItems.find((items)=>items.id === id)
- console.log(find)
+
       if(!find){
 
         setValid('item is not in cart')
