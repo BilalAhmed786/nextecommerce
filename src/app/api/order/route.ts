@@ -5,9 +5,11 @@ import { sendOrderEmail } from '@/nodemailer/orderplace';
 
 const prisma = new PrismaClient();
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16' as any,
-});
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2023-10-16' as any,
+  })
+  : null;
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -81,6 +83,11 @@ export async function POST(req: NextRequest) {
 
   // Stripe Payment Flow (data will be saved after webhook confirms payment)
   try {
+
+      if (!stripe) {
+      return NextResponse.json({ error: "Stripe not configured" }, { status: 500 });
+    }
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
