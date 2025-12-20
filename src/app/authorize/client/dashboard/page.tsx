@@ -51,7 +51,7 @@ export default function WelcomePage() {
         <div className="mt-8 text-sm text-gray-500">
           Not {user.name}? <a  onClick={()=>signOut({ callbackUrl: '/login' })} className="underline text-red-500 cursor-pointer">Logout</a>
         </div>
-      </div>
+      </div>  
     </div>
   );
 }

@@ -20,7 +20,7 @@ const mediafilter = ({ categories, priceRanges }: any) => {
       ${toggle ? 'translate-x-0' : '-translate-x-full'} p-10 block h-screen top-0 left-0 z-50`}
         >
           <button className="absolute right-2 border-1 top-2 rounded-full px-1 text-xs" onClick={() => settoggle(false)}>X</button>
-          <Link className="absolute top-2 right-10  mb-5 underline text-white" href={'http://localhost:3000'}>
+          <Link className="absolute top-2 right-10  mb-5 underline text-white" href={`${process.env.NEXT_PUBLIC_URL}`}>
           <FaSyncAlt/>
           </Link>
           <Shopsearchform/>

@@ -53,7 +53,7 @@ const Cart = () => {
         :
         <div
           className="hover:scale-110 hidden md:hidden lg:block mt-0.5 text-[20px] hover:text-green-200 transition-transform duration-200"
-          onClick={() => signOut({ callbackUrl: '/login' })}
+          onClick={() => signOut({ callbackUrl: '/login'})}
         >
           <FiLogOut />
         </div>

@@ -10,7 +10,11 @@ export default function Header() {
   return (
     <header className="h-14 bg-linear-to-t from-amber-600 to-amber-700 text-white py-4 w-full">
       <div className="flex w-full justify-between items-center px-5">
+
+        <Link href={'https://thrifterpoint.onrender.com'}>
+        
         <h2 className="text-sm md:text-sm lg:text-2xl font-bold">Thrifters point</h2>
+        </Link>
 
         <nav className="hidden lg:flex items-center gap-6">
           <Link

@@ -10,8 +10,8 @@ import { get_shipments} from '../graphql/product';
 import { get_address } from '../graphql/orders';
 import axios from 'axios';
 
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+console.log(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+const stripePromise = loadStripe('pk_test_51NcvwgKgFXig68gS6L70mmG6mn6OYPuyBgpMbqQtRtEwfhvfzjU8Emuh8kHJn9U512rxYValI8Jn6MUxoUtf3D2B00k8kkT6Im');
 export default function CheckoutPage() {
   
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -114,7 +114,6 @@ export default function CheckoutPage() {
       });
 
       const { sessionId } = res.data;
-
       if (paymentMethod === 'COD') {
         localStorage.removeItem('cart');
         window.dispatchEvent( new Event('cartChanged'))

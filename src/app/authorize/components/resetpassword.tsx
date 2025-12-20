@@ -79,7 +79,7 @@ export default function ResetPasswordPage() {
           <p className='text-lg text-black'>Forget password?</p>
           <Link
             className="inline-block px-4 py-2 bg-amber-600 text-white rounded"
-            href="http://localhost:3000/forgetpassword"
+            href={`${process.env.NEXT_PUBLIC_URL}/forgetpassword`}
           >
            Forget password
           </Link>

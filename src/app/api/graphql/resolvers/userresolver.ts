@@ -186,7 +186,7 @@ export const userresolver = {
 
             const token = jwt.sign({ id: finduser.id }, process.env.JWT_SEC as string, { expiresIn: '5m' })
 
-            const resetLink = `http://localhost:3000/resetpassword?token=${token}`;
+            const resetLink = `${process.env.NEXT_PUBLIC_URL}/resetpassword?token=${token}`;
 
 
             await forgetpasswordLink({

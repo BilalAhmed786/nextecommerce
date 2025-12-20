@@ -1,26 +1,28 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import nextConnect from 'next-connect';
 import { upload } from '@/multer/multer';
+import { uploadToCloudinary } from '@/utils/uploadtocloudinary';
 
-const apiRoute = nextConnect<NextApiRequest, NextApiResponse>();
+const handler = nextConnect<NextApiRequest, NextApiResponse>();
 
-apiRoute.use(upload.single('image'));
+handler.use(upload.single('image'));
 
-apiRoute.post((req: any, res: NextApiResponse) => {
-  const file = req.file;
-
-  if (!file) {
+handler.post(async (req: any, res: NextApiResponse) => {
+  if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
 
-  const imageUrl = `/uploads/${file.filename}`;
-  return res.status(200).json({ imageUrl });
+  try {
+    const imageUrl = await uploadToCloudinary(req.file, 'products/main');
+    return res.status(200).json({ imageUrl });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Upload failed' });
+  }
 });
 
 export const config = {
-  api: {
-    bodyParser: false,
-  },
+  api: { bodyParser: false },
 };
 
-export default apiRoute;
+export default handler;
