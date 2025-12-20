@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
   // Stripe Payment Flow (data will be saved after webhook confirms payment)
   try {
 
-    if (!stripe) {
+      if (!stripe) {
       return NextResponse.json({ error: "Stripe not configured" }, { status: 500 });
     }
 
