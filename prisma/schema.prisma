@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,122 +7,113 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
+model user {
+  id        String    @id @default(cuid())
   name      String?
-  email     String   @unique
+  email     String    @unique
   password  String
-  role      Role     @default(CUSTOMER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orders    Order[]
-  addresses Address[]
+  role      role      @default(CUSTOMER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  addresses address[]
+  orders    order[]
 }
 
-model Product {
-  id          String    @id @default(cuid())
-  name        String
-  description String?
-  price       Float
-  stock       Int
-  image       String
-  category    Category  @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  // Relations
-  orderItems  OrderItem[]
-  images      ProductImage[]  
+model product {
+  id            String         @id @default(cuid())
+  name          String
+  description   String?
+  price         Float
+  stock         Int
+  image         String
+  categoryId    String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  imagePublicId String?
+  orderItems    orderItem[]
+  category      category       @relation(fields: [categoryId], references: [id])
+  images        productImage[]
 }
 
-model ProductImage {
-  id        String   @id @default(cuid())
+model productImage {
+  id        String  @id @default(cuid())
   url       String
   alt       String?
-  product   Product  @relation(fields: [productId], references: [id],onDelete:Cascade)
   productId String
-  
+  publicId  String?
+  product   product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
-model Category {
+model category {
   id       String    @id @default(cuid())
   name     String    @unique
-  products Product[]
+  products product[]
 }
 
-model Order {
-  id         String      @id @default(cuid())
-  user       User?        @relation(fields: [userId], references: [id])
-  userId     String?
-  subtotal   Float
+model order {
+  id           String      @id @default(cuid())
+  userId       String?
+  total        Float
+  status       orderStatus @default(PENDING)
+  createdAt    DateTime    @default(now())
+  addressId    String
+  payment      paymentmode
   shippingCost Float
-  total      Float
-  status     OrderStatus @default(PENDING)
-  createdAt  DateTime    @default(now())
-  address    Address   @relation(fields: [addressId], references: [id])
-  addressId  String
-  payment    Paymentmode
-
-  orderItems OrderItem[]
+  subtotal     Float
+  address      address     @relation(fields: [addressId], references: [id])
+  user         user?       @relation(fields: [userId], references: [id])
+  orderItems   orderItem[]
 }
 
-//many to many relation b/w order and product
-model OrderItem {
-  id        String   @id @default(cuid())
-  order     Order    @relation(fields: [orderId], references: [id])
+model orderItem {
+  id        String  @id @default(cuid())
   orderId   String
-  product   Product  @relation(fields: [productId], references: [id])
   productId String
   quantity  Int
   price     Float
+  order     order   @relation(fields: [orderId], references: [id])
+  product   product @relation(fields: [productId], references: [id])
 }
 
-
-
-model Address {
-  id         String   @id @default(cuid())
-  user       User?     @relation(fields: [userId], references: [id])
+model address {
+  id         String  @id @default(cuid())
   userId     String?
-  name       String
-  email      String
   street     String
   city       String
   state      String
   postalCode String
   country    String
-  isDefault  Boolean  @default(false)
-  orders Order[]
+  isDefault  Boolean @default(false)
+  email      String
+  name       String
+  user       user?   @relation(fields: [userId], references: [id])
+  orders     order[]
 }
 
-model ShippingRate {
+model shippingRate {
   id     String @id @default(cuid())
   city   String @unique
   amount Float
 }
 
-model PriceFilter{
+model priceFilter {
   id     String @id @default(cuid())
   amount String
-
 }
 
-
-enum Role {
+enum role {
   ADMIN
   CUSTOMER
 }
 
-enum OrderStatus {
+enum orderStatus {
   PENDING
   SHIPPED
   DELIVERED
   CANCELLED
 }
 
-enum Paymentmode {
-
+enum paymentmode {
   STRIPE
   COD
-
 }

@@ -1,48 +1,39 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-import fs from 'fs';
-import path from 'path';
-import { MyContext } from '../route';
-
-
-const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+import fs from "fs";
+import path from "path";
+import { MyContext } from "../route";
+import { deleteFromCloudinary } from "@/utils/deletecloudnaryimage";
+const uploadDir = path.join(process.cwd(), "public", "uploads");
 
 export const productresolvers = {
-
   Query: {
-    products: async (_:any,args:{skip:number,take:number}) => {
-         const { skip, take } = args;
-      
-         return await prisma.product.findMany({
-          skip,
-          take,
-          include: {
+    products: async (_: any, args: { skip: number; take: number }) => {
+      const { skip, take } = args;
+
+      return await prisma.product.findMany({
+        skip,
+        take,
+        include: {
           category: true,
           images: true,
         },
       });
     },
     getSingleproduct: async (_: any, args: { id: string }) => {
-      const { id } = args
-      
-      try {
+      const { id } = args;
 
+      try {
         const result = await prisma.product.findUnique({
           where: { id },
           include: { category: true, images: true },
-        })
+        });
 
-        return result
-
+        return result;
       } catch (error) {
-
-        console.log(error)
+        console.log(error);
       }
-
-
     },
-
-
 
     categories: async () => {
       return await prisma.category.findMany();
@@ -54,23 +45,22 @@ export const productresolvers = {
     pricefilter: async () => {
       return await prisma.priceFilter.findMany();
     },
-
   },
 
   Mutation: {
-    createCategory: async (_: any, args: { name: string }, context: MyContext) => {
-
+    createCategory: async (
+      _: any,
+      args: { name: string },
+      context: MyContext
+    ) => {
       if (context.user?.role !== "ADMIN") {
-
-        return { message: 'unauthorize user' }
+        return { message: "unauthorize user" };
       }
 
-      const { name } = args
+      const { name } = args;
 
       if (!name) {
-
-
-        return { message: 'field is required' }
+        return { message: "field is required" };
       }
       try {
         const existing = await prisma.category.findFirst({
@@ -92,16 +82,17 @@ export const productresolvers = {
           category,
           message: "Category created successfully",
         };
-
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
-    deleteCategory: async (_: any, { id }: { id: string }, context: MyContext) => {
-
+    deleteCategory: async (
+      _: any,
+      { id }: { id: string },
+      context: MyContext
+    ) => {
       if (context.user?.role !== "ADMIN") {
-
-        return { message: 'unauthorize user' }
+        return { message: "unauthorize user" };
       }
 
       try {
@@ -110,81 +101,62 @@ export const productresolvers = {
         });
 
         return {
-          message: 'Category deleted successfully',
-          category: result
+          message: "Category deleted successfully",
+          category: result,
         };
       } catch (error) {
-
         console.error(error);
-
       }
     },
 
-    upateCategory: async (_: any, args: { id: string, name: string }, context: MyContext) => {
-
+    upateCategory: async (
+      _: any,
+      args: { id: string; name: string },
+      context: MyContext
+    ) => {
       if (context.user?.role !== "ADMIN") {
-
-        return { message: 'unauthorize user' }
+        return { message: "unauthorize user" };
       }
 
-
       try {
-
-        const { id, name } = args
+        const { id, name } = args;
 
         if (!name) {
-          return { message: "*field required" }
+          return { message: "*field required" };
         }
 
         const result = await prisma.category.update({
           data: { name },
-          where: { id }
-        })
+          where: { id },
+        });
 
-        return { category: result }
-
-
+        return { category: result };
       } catch (error) {
-
-        console.log(error)
+        console.log(error);
       }
-
-
     },
 
-
-
-
     createProduct: async (_: any, args: { input: any }, context: MyContext) => {
-
       const {
         name,
         description,
         price,
         stock,
         image,
+        imagePublicId,
         categoryId,
         images,
       } = args.input;
 
       if (context.user?.role !== "ADMIN") {
-
-        return { message: 'unauthorize user' }
+        return { message: "unauthorized user" };
       }
 
-
-
       try {
-
-        const findproduct = await prisma.product.findFirst({
-          where: { name }
-        })
-
+        const findproduct = await prisma.product.findFirst({ where: { name } });
         if (findproduct) {
-
-          return { message: 'product already exist' }
+          return { message: "product already exists" };
         }
-
 
         const product = await prisma.product.create({
           data: {
@@ -193,11 +165,13 @@ export const productresolvers = {
             price,
             stock,
             image,
+            imagePublicId,
             categoryId,
             images: {
-              create: images.map((url: string) => ({
-                url,
-                alt: 'optional alt text',
+              create: images.map((img: { url: string; publicId: string }) => ({
+                url: img.url,
+                publicId: img.publicId,
+                alt: "optional alt text",
               })),
             },
           },
@@ -219,14 +193,11 @@ export const productresolvers = {
         };
       }
     },
+
     updateProduct: async (_: any, args: { input: any }, context: MyContext) => {
-
-
       if (context.user?.role !== "ADMIN") {
-
-        return { message: 'unauthorize user' }
+        return { message: "unauthorized user" };
       }
-
 
       const {
         id,
@@ -234,50 +205,51 @@ export const productresolvers = {
         description,
         price,
         stock,
-        image,         // new image URL from frontend (maybe same or new)
+        image,
+        imagePublicId,
         categoryId,
-        images,        // array of new gallery image URLs
+        images, 
       } = args.input;
-
+console.log(images)
       try {
-        // 1. Get existing product (especially the old main image)
         const existingProduct = await prisma.product.findUnique({
           where: { id },
+          include: { images: true },
         });
 
         if (!existingProduct) {
-          return {
-            product: null,
-            message: "Product not found",
+          return { product: null, message: "Product not found" };
+        }
+        const isMainImageChanged =
+          imagePublicId && imagePublicId !== existingProduct.imagePublicId;
+
+        if (isMainImageChanged && existingProduct.imagePublicId) {
+          await deleteFromCloudinary(existingProduct.imagePublicId);
+        }
+
+        const updateData: any = {
+          name,
+          description,
+          price,
+          stock,
+          categoryId,
+          image,
+          imagePublicId,
+        };
+
+        if (Array.isArray(images) && images.length > 0) {
+          updateData.images = {
+            create: images.map((img: { url: string; publicId: string }) => ({
+              url: img.url,
+              publicId: img.publicId,
+              alt: "optional alt text",
+            })),
           };
         }
 
-        // 2. Compare and delete old main image if it's being replaced
-        if (existingProduct.image && existingProduct.image !== image) {
-          const oldFilePath = path.join(process.cwd(), 'public', 'uploads', path.basename(existingProduct.image));
-
-          if (fs.existsSync(oldFilePath)) {
-            fs.unlinkSync(oldFilePath);
-          }
-        }
-
-        // 3. Update product and add new gallery images
         const updatedProduct = await prisma.product.update({
           where: { id },
-          data: {
-            name,
-            description,
-            price,
-            stock,
-            image, // new main image
-            categoryId,
-            images: {
-              create: images.map((url: string) => ({
-                url,
-                alt: 'optional alt text',
-              })),
-            },
-          },
+          data: updateData,
           include: {
             category: true,
             images: true,
@@ -290,91 +262,102 @@ export const productresolvers = {
         };
       } catch (error) {
         console.error(error);
-
+        return { product: null, message: "Failed to update product" };
       }
     },
 
     deleteProduct: async (_: any, args: { id: string }, context: MyContext) => {
-
-
       if (context.user?.role !== "ADMIN") {
-
-        return { message: 'unauthorize user' }
+        return { message: "unauthorized user" };
       }
 
-      const { id } = args
+      const { id } = args;
 
       try {
+        const product = await prisma.product.findUnique({
+          where: { id },
+          include: { images: true },
+        });
 
-        const result = await prisma.product.delete({
-          where: { id }
-        })
+        if (!product) {
+          return { message: "Product not found" };
+        }
 
-        return { message: 'product delete successfully' }
+        // delete main image
+        if (product.imagePublicId) {
+          await deleteFromCloudinary(product.imagePublicId);
+        }
 
+        // delete gallery images
+        await Promise.all(
+          product.images
+            .filter((img) => img.publicId)
+            .map((img) => deleteFromCloudinary(img.publicId!))
+        );
 
+        await prisma.product.delete({
+          where: { id },
+        });
+
+        return { message: "Product deleted successfully" };
       } catch (error) {
-
-        console.log(error)
+        console.error(error);
+        return { message: "Failed to delete product" };
       }
-
-
     },
 
-    deleteGalleryImage: async (_: any, args: { id: string }, context: MyContext) => {
-
-
+    deleteGalleryImage: async (
+      _: any,
+      args: { id: string },
+      context: MyContext
+    ) => {
       if (context.user?.role !== "ADMIN") {
-
-        return { message: 'unauthorize user' }
+        return { success: false, message: "Unauthorized user" };
       }
 
-      const { id } = args
+      const { id } = args;
 
       try {
-
         const image = await prisma.productImage.findUnique({
           where: { id },
         });
 
         if (!image) {
-          return { success: false, message: 'Image not found' };
+          return { success: false, message: "Image not found" };
         }
 
-        const filePath = path.join(uploadDir, image.url.replace('/uploads/', ''));
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
+        if (image.publicId) {
+          await deleteFromCloudinary(image.publicId);
         }
 
-        const result = await prisma.productImage.delete({
+        await prisma.productImage.delete({
           where: { id },
         });
 
-        return { product: result, message: 'Image deleted successfully' };
+        return {
+          success: true,
+          message: "Gallery image deleted successfully",
+        };
       } catch (error) {
-        console.error('Failed to delete image:', error);
-        return { success: false, message: 'Error deleting image' };
+        console.error("Failed to delete image:", error);
+        return { success: false, message: "Error deleting image" };
       }
-
-
-
     },
 
-    createShipment: async (_: any, args: { city: string; amount: number }, context: MyContext) => {
-
+    createShipment: async (
+      _: any,
+      args: { city: string; amount: number },
+      context: MyContext
+    ) => {
       if (context.user?.role !== "ADMIN") {
-
-        return { message: 'unauthorize user' }
+        return { message: "unauthorize user" };
       }
 
-
       try {
-
-        const { city, amount } = args
+        const { city, amount } = args;
 
         if (!city || !amount) {
-
-          return { message: "all fields required" }
+          return { message: "all fields required" };
         }
         const result = await prisma.shippingRate.create({
           data: {
@@ -383,19 +366,19 @@ export const productresolvers = {
           },
         });
 
-        return { shipment: result }
+        return { shipment: result };
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-
     },
-    updateShipment: async (_: any, args: { id: string; city: string; amount: number }) => {
-
-      const { id, city, amount } = args
+    updateShipment: async (
+      _: any,
+      args: { id: string; city: string; amount: number }
+    ) => {
+      const { id, city, amount } = args;
 
       if (!city || !amount) {
-
-        return { message: 'all fields required' }
+        return { message: "all fields required" };
       }
 
       try {
@@ -407,80 +390,80 @@ export const productresolvers = {
           },
         });
 
-        return { shipment: result }
+        return { shipment: result };
       } catch (error) {
-
-        console.log(error)
+        console.log(error);
       }
-
     },
     deleteShipment: async (_: any, args: { id: string }) => {
-
       await prisma.shippingRate.delete({ where: { id: args.id } });
       return true;
     },
-    createPriceFilter: async (_: any, args: { range: string }, context: MyContext) => {
-      if (context.user?.role !== 'ADMIN') {
-
-        return { message: 'unauthorized' }
+    createPriceFilter: async (
+      _: any,
+      args: { range: string },
+      context: MyContext
+    ) => {
+      if (context.user?.role !== "ADMIN") {
+        return { message: "unauthorized" };
       }
 
-      const {range } = args
+      const { range } = args;
 
       if (!range) {
-
-        return { message: 'field is required' }
+        return { message: "field is required" };
       }
 
       try {
-
         const result = await prisma.priceFilter.create({
-          data: { amount:range }
-        })
+          data: { amount: range },
+        });
 
-        return { pricerange: result }
-
+        return { pricerange: result };
       } catch (error) {
-
-        console.log(error)
+        console.log(error);
       }
-
-
-
-
     },
-    updatePriceFilter: async (_: any, args: { id: string; range: string }, context: MyContext) => {
-      if (context.user?.role !== 'ADMIN') {
-        return { message: 'unauthorized' };
+    updatePriceFilter: async (
+      _: any,
+      args: { id: string; range: string },
+      context: MyContext
+    ) => {
+      if (context.user?.role !== "ADMIN") {
+        return { message: "unauthorized" };
       }
 
       const { id, range } = args;
 
       if (!id || !range) {
-        return { message: 'all fields are required' };
+        return { message: "all fields are required" };
       }
 
       try {
         const existing = await prisma.priceFilter.findUnique({ where: { id } });
 
         if (!existing) {
-          return { message: 'Price range not found' };
+          return { message: "Price range not found" };
         }
 
         const result = await prisma.priceFilter.update({
           where: { id },
-          data: { amount:range },
+          data: { amount: range },
         });
 
         return { pricerange: result };
       } catch (error) {
         console.error(error);
-        return { message: 'Something went wrong' };
+        return { message: "Something went wrong" };
       }
     },
-    
-    deletePriceFilter: async (_: any, args: { id: string }, context: MyContext) => {
-      if (context.user?.role !== 'ADMIN') {
+
+    deletePriceFilter: async (
+      _: any,
+      args: { id: string },
+      context: MyContext
+    ) => {
+      if (context.user?.role !== "ADMIN") {
         return false;
       }
 
@@ -502,11 +485,7 @@ export const productresolvers = {
         return true;
       } catch (error) {
         console.error(error);
-
       }
-    }
-
-
-
+    },
   },
 };

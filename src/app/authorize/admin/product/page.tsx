@@ -1,35 +1,37 @@
-'use client';
-import { useState, useRef } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
-import { get_category, create_poroduct } from '@/app/graphql/product';
-import { prodCategory } from '../../../types/layouttype';
-import axios from 'axios';
+"use client";
+import { useState, useRef } from "react";
+import { useQuery, useMutation } from "@apollo/client";
+import { get_category, create_poroduct } from "@/app/graphql/product";
+import { prodCategory } from "../../../types/layouttype";
+import axios from "axios";
 
 export default function ProductForm() {
   const [formValues, setFormValues] = useState({
-    name: '',
-    description: '',
+    name: "",
+    description: "",
     price: 1,
     stock: 1,
-    categoryId: '',
+    categoryId: "",
   });
 
   const [mainImageFile, setMainImageFile] = useState<File | null>(null);
   const [imagesFiles, setImagesFiles] = useState<File[]>([]);
   const { data } = useQuery<{ categories: prodCategory[] }>(get_category);
   const [createProduct] = useMutation(create_poroduct);
-  const [validation,setValid]= useState('')
+  const [validation, setValid] = useState("");
 
   const mainImageInputRef = useRef<HTMLInputElement | null>(null);
   const otherImagesInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormValues((prev) => ({
       ...prev,
-      [name]: name === 'price' || name === 'stock' ? Number(value) : value,
+      [name]: name === "price" || name === "stock" ? Number(value) : value,
     }));
   };
 
@@ -49,62 +51,64 @@ export default function ProductForm() {
     const newFiles = imagesFiles.filter((_, i) => i !== index);
     setImagesFiles(newFiles);
     if (otherImagesInputRef.current) {
-      otherImagesInputRef.current.value = '';
+      otherImagesInputRef.current.value = "";
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if(
-         !mainImageFile 
-       || !imagesFiles.length
-       ||!formValues.name 
-       ||formValues.price === 0
-       || formValues.stock === 0
-       ||!formValues.description 
-       || !formValues.categoryId){
-      
-        setValid('*All fields requried')
-      return 
+    if (
+      !mainImageFile ||
+      !imagesFiles.length ||
+      !formValues.name ||
+      formValues.price === 0 ||
+      formValues.stock === 0 ||
+      !formValues.description ||
+      !formValues.categoryId
+    ) {
+      setValid("*All fields required");
+      return;
     }
 
     try {
       // Upload main image
-      let mainImageUrl = '';
+      let mainImage: { url: string; publicId: string } | null = null;
       if (mainImageFile) {
         const mainForm = new FormData();
-        mainForm.append('image', mainImageFile);
-        const { data } = await axios.post('/api/upload/main', mainForm);
-        mainImageUrl = data.imageUrl;
+        mainForm.append("image", mainImageFile);
+        const { data } = await axios.post("/api/upload/main", mainForm);
+        mainImage = data.image; 
       }
 
       // Upload gallery images
-      let imageUrls: string[] = [];
+      let galleryImages: { url: string; publicId: string }[] = [];
       if (imagesFiles.length > 0) {
         const imagesForm = new FormData();
-        imagesFiles.forEach((file) => imagesForm.append('images', file));
-        const { data } = await axios.post('/api/upload/images', imagesForm);
-        imageUrls = data.imageUrls;
+        imagesFiles.forEach((file) => imagesForm.append("images", file));
+        const { data } = await axios.post("/api/upload/images", imagesForm);
+        galleryImages = data.images; 
       }
 
       // Now send all to GraphQL
-      const {data} =await createProduct({
+      const { data } = await createProduct({
         variables: {
           input: {
             ...formValues,
-            image: mainImageUrl,
-            images: imageUrls,
+            image: mainImage?.url || "",
+            imagePublicId: mainImage?.publicId || null,
+            images: galleryImages.map((img) => ({
+              url: img.url,
+              publicId: img.publicId,
+            })),
           },
         },
       });
 
-      setValid(data.createProduct.message)
-
-      
+      setValid(data.createProduct.message);
     } catch (err) {
       console.error(err);
-      alert('Failed to create product.');
+      alert("Failed to create product.");
     }
   };
 
@@ -200,7 +204,7 @@ export default function ProductForm() {
               onClick={() => {
                 setMainImageFile(null);
                 if (mainImageInputRef.current) {
-                  mainImageInputRef.current.value = '';
+                  mainImageInputRef.current.value = "";
                 }
               }}
               className="text-red-500 hover:underline text-sm"
@@ -242,7 +246,11 @@ export default function ProductForm() {
           </div>
         )}
       </div>
-       {validation ? <div className='text-red-500 text-center'>{validation}</div>:""}
+      {validation ? (
+        <div className="text-red-500 text-center">{validation}</div>
+      ) : (
+        ""
+      )}
       <button
         type="submit"
         className="block m-auto bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-700"

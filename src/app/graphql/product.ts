@@ -1,144 +1,123 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
 
 export const create_category = gql`
-
-mutation CreateCategory($name: String!) {
-  createCategory(name: $name) {
-    category {
+  mutation CreateCategory($name: String!) {
+    createCategory(name: $name) {
+      category {
+        id
+        name
+      }
+      message
+    }
+  }
+`;
+export const get_category = gql`
+  query {
+    categories {
       id
       name
     }
-     message
   }
-}
-
-
-`
-export const get_category = gql`
-
-query{
- categories{
-   id
-   name
-
- }
-
-}
-`
+`;
 export const delete_category = gql`
   mutation DeleteCategory($id: String!) {
     deleteCategory(id: $id) {
-     category{
-      id
-      name
-
-     }
-     message
+      category {
+        id
+        name
+      }
+      message
     }
   }
 `;
 
 export const update_category = gql`
-  mutation ($id: String!,$name:String!) {
-    upateCategory(id: $id,name:$name) {
-     category{
-      id
-      name
-    }
-     message
+  mutation ($id: String!, $name: String!) {
+    upateCategory(id: $id, name: $name) {
+      category {
+        id
+        name
+      }
+      message
     }
   }
 `;
 
 export const create_poroduct = gql`
-
-mutation($input:CreateProductInput){
-
-createProduct(input:$input){
-product{
-  id
-  name
-  description
-}
- message
-
-}
-
-}
-`
+  mutation ($input: CreateProductInput) {
+    createProduct(input: $input) {
+      product {
+        id
+        name
+        description
+        image
+        imagePublicId
+        images {
+          url
+          publicId
+        }
+      }
+      message
+    }
+  }
+`;
 
 export const get_products = gql`
-
-query($skip:Int,$take:Int){
- products(skip:$skip,take:$take){
-  id
-  name
-  description
-  stock
-  price
-  image
-  category {
-    id
-    name
+  query ($skip: Int, $take: Int) {
+    products(skip: $skip, take: $take) {
+      id
+      name
+      description
+      stock
+      price
+      image
+      category {
+        id
+        name
+      }
+      categoryId
+      images {
+        url
+      }
+    }
   }
-  categoryId
-  images {
-    url
-  }
-   
-
- }
-
-}
-`
+`;
 
 export const getsingle_product = gql`
-
-query($id:String!){
-
-getSingleproduct(id:$id){
-
-  id
-  name
-  description
-  stock
-  price
-  image
-  category {
-    id
-    name
+  query ($id: String!) {
+    getSingleproduct(id: $id) {
+      id
+      name
+      description
+      stock
+      price
+      image
+      imagePublicId
+      category {
+        id
+        name
+      }
+      images {
+        id
+        url
+      }
+    }
   }
-  images {
-    id
-    url
-  }
-
-
-}
-
-
-}
-
-
-
-`
+`;
 
 export const delete_product = gql`
+  mutation ($id: String!) {
+    deleteProduct(id: $id) {
+      product {
+        id
+        name
+        description
+      }
 
-mutation($id:String!){
-  deleteProduct(id:$id){
-  product{
-   id
-   name
-   description
+      message
+    }
   }
- 
-  message
-}
-
-}
-`
-
+`;
 
 export const update_product = gql`
   mutation UpdateProduct($input: UpdateProductInput!) {
@@ -153,20 +132,17 @@ export const update_product = gql`
 `;
 
 export const deletegallery_image = gql`
-  mutation ($id:String!) {
-    deleteGalleryImage(id:$id){
-    category{
+  mutation ($id: String!) {
+    deleteGalleryImage(id: $id) {
+      category {
         id
         name
       }
-      
-       message
-   
-      }
-      
+
+      message
+    }
   }
 `;
-
 
 export const get_shipments = gql`
   query GetShipments {
@@ -181,12 +157,12 @@ export const get_shipments = gql`
 export const create_shipment = gql`
   mutation CreateShipment($city: String!, $amount: Float!) {
     createShipment(city: $city, amount: $amount) {
-    shipment{
-      id
-      city
-      amount
-    }
-    message
+      shipment {
+        id
+        city
+        amount
+      }
+      message
     }
   }
 `;
@@ -194,7 +170,7 @@ export const create_shipment = gql`
 export const update_shipment = gql`
   mutation UpdateShipment($id: ID!, $city: String!, $amount: Float!) {
     updateShipment(id: $id, city: $city, amount: $amount) {
-      shipment{
+      shipment {
         id
         city
         amount
@@ -248,4 +224,3 @@ export const delete_price_filter = gql`
     deletePriceFilter(id: $id)
   }
 `;
-

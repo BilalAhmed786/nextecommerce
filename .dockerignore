@@ -5,4 +5,5 @@ Dockerfile
 .git
 .gitignore
 .next/cache
-.env
+.env.local
+.env.production

@@ -40,7 +40,15 @@ useEffect(() => {
           <>
             {cartItems.map((item) => (
               <div key={item.id} className="flex gap-4 items-center border-b pb-3 p-2">
-                <Image src={item.image} alt={item.name} width={50} height={50} className="rounded" />
+                <Image 
+                src={item.image} 
+                alt={item.name} 
+                width={50} 
+                height={50}
+                className="rounded" 
+                unoptimized={true}
+                
+                />
 
                 <div className="flex-1">
                   <p className="text-sm font-medium">{item.name}</p>

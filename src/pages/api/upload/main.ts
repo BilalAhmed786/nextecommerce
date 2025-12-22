@@ -13,8 +13,14 @@ handler.post(async (req: any, res: NextApiResponse) => {
   }
 
   try {
-    const imageUrl = await uploadToCloudinary(req.file, 'products/main');
-    return res.status(200).json({ imageUrl });
+    const uploaded = await uploadToCloudinary(req.file, 'products/main');
+
+    return res.status(200).json({
+      image: {
+        url: uploaded.url,
+        publicId: uploaded.publicId,
+      },
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Upload failed' });

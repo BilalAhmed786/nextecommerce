@@ -243,6 +243,7 @@ export default function CheckoutPage() {
                 width={60}
                 height={60}
                 className="rounded object-cover"
+                unoptimized={true}
               />
               <div>
                 <p className="font-medium">{item.name}</p>
