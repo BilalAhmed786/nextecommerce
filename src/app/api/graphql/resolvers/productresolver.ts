@@ -210,7 +210,7 @@ export const productresolvers = {
         categoryId,
         images, 
       } = args.input;
-console.log(images)
+
       try {
         const existingProduct = await prisma.product.findUnique({
           where: { id },

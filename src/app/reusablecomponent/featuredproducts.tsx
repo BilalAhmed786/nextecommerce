@@ -53,6 +53,7 @@ export default function ProductCarousel({ products }: Props) {
                     alt={product.name}
                     fill
                     className="object-contain"
+                    unoptimized={true}
                   />
                 </div>
                 <div className='text-center'>

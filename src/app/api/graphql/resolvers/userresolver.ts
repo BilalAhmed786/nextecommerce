@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs"
 import { MyContext } from "../route"
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import { PrismaClient, Role } from "@prisma/client"
+import { PrismaClient,role } from "@prisma/client"
 import { forgetpasswordLink } from "@/nodemailer/forgetpassword"
 import Email from "next-auth/providers/email"
 const prisma = new PrismaClient()
@@ -70,7 +70,7 @@ export const userresolver = {
             }
         },
 
-        updateUser: async (_: any, args: { id: string, role: Role }, context: MyContext) => {
+        updateUser: async (_: any, args: { id: string, role: role }, context: MyContext) => {
 
             if (context.user?.role !== 'ADMIN') {
 
