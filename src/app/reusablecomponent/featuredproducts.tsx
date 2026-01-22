@@ -22,7 +22,7 @@ export default function ProductCarousel({ products }: Props) {
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
-    dots: true,
+    dots: false,
     autoplay: true,
     arrows:false,
     autoplaySpeed: 3000,
