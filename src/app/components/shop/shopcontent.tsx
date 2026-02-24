@@ -96,8 +96,8 @@ export default function Shopcontent() {
 
       <main className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
         {products.length ? (
-          products.map((product) => (
-            <div key={product.id} className="p-2">
+          products.map((product,index) => (
+            <div  key={`${product.id}-${index}`} className="p-2">
               <Link href={`/singleproduct/${product.id}`}>
                 <img src={product.image} className="w-full h-80 object-cover" />
               </Link>
