@@ -8,11 +8,44 @@ const uploadDir = path.join(process.cwd(), "public", "uploads");
 
 export const productresolvers = {
   Query: {
-    products: async (_: any, args: { skip: number; take: number }) => {
-      const { skip, take } = args;
+    products: async (
+      _: any,
+      args: {
+        skip?: number;
+        take?: number;
+        category?: string;
+        minPrice?: number;
+        maxPrice?: number;
+        search?: string;
+      },
+    ) => {
+      const { skip = 0, take = 3, category, minPrice, maxPrice, search } = args;
 
-      return await prisma.product.findMany({
-        skip,
+      const where: any = {
+        stock: { gt: 0 },
+      };
+
+      if (category) {
+        where.categoryId = category;
+      }
+
+      if (minPrice != null && maxPrice != null) {
+        where.price = {
+          gte: minPrice,
+          lte: maxPrice,
+        };
+      }
+
+      if (search) {
+        where.name = {
+          contains: search,
+          mode: "insensitive",
+        };
+      }
+
+      return prisma.product.findMany({
+        where, 
+        skip, 
         take,
         include: {
           category: true,
@@ -20,6 +53,8 @@ export const productresolvers = {
         },
       });
     },
+    
+    
     getSingleproduct: async (_: any, args: { id: string }) => {
       const { id } = args;
 
@@ -35,13 +70,17 @@ export const productresolvers = {
       }
     },
 
+    
     categories: async () => {
       return await prisma.category.findMany();
     },
 
+    
     shipments: async () => {
       return await prisma.shippingRate.findMany();
     },
+    
+    
     pricefilter: async () => {
       return await prisma.priceFilter.findMany();
     },
@@ -51,7 +90,7 @@ export const productresolvers = {
     createCategory: async (
       _: any,
       args: { name: string },
-      context: MyContext
+      context: MyContext,
     ) => {
       if (context.user?.role !== "ADMIN") {
         return { message: "unauthorize user" };
@@ -89,7 +128,7 @@ export const productresolvers = {
     deleteCategory: async (
       _: any,
       { id }: { id: string },
-      context: MyContext
+      context: MyContext,
     ) => {
       if (context.user?.role !== "ADMIN") {
         return { message: "unauthorize user" };
@@ -112,7 +151,7 @@ export const productresolvers = {
     upateCategory: async (
       _: any,
       args: { id: string; name: string },
-      context: MyContext
+      context: MyContext,
     ) => {
       if (context.user?.role !== "ADMIN") {
         return { message: "unauthorize user" };
@@ -208,7 +247,7 @@ export const productresolvers = {
         image,
         imagePublicId,
         categoryId,
-        images, 
+        images,
       } = args.input;
 
       try {
@@ -292,7 +331,7 @@ export const productresolvers = {
         await Promise.all(
           product.images
             .filter((img) => img.publicId)
-            .map((img) => deleteFromCloudinary(img.publicId!))
+            .map((img) => deleteFromCloudinary(img.publicId!)),
         );
 
         await prisma.product.delete({
@@ -309,7 +348,7 @@ export const productresolvers = {
     deleteGalleryImage: async (
       _: any,
       args: { id: string },
-      context: MyContext
+      context: MyContext,
     ) => {
       if (context.user?.role !== "ADMIN") {
         return { success: false, message: "Unauthorized user" };
@@ -347,7 +386,7 @@ export const productresolvers = {
     createShipment: async (
       _: any,
       args: { city: string; amount: number },
-      context: MyContext
+      context: MyContext,
     ) => {
       if (context.user?.role !== "ADMIN") {
         return { message: "unauthorize user" };
@@ -373,7 +412,7 @@ export const productresolvers = {
     },
     updateShipment: async (
       _: any,
-      args: { id: string; city: string; amount: number }
+      args: { id: string; city: string; amount: number },
     ) => {
       const { id, city, amount } = args;
 
@@ -402,7 +441,7 @@ export const productresolvers = {
     createPriceFilter: async (
       _: any,
       args: { range: string },
-      context: MyContext
+      context: MyContext,
     ) => {
       if (context.user?.role !== "ADMIN") {
         return { message: "unauthorized" };
@@ -427,7 +466,7 @@ export const productresolvers = {
     updatePriceFilter: async (
       _: any,
       args: { id: string; range: string },
-      context: MyContext
+      context: MyContext,
     ) => {
       if (context.user?.role !== "ADMIN") {
         return { message: "unauthorized" };
@@ -461,7 +500,7 @@ export const productresolvers = {
     deletePriceFilter: async (
       _: any,
       args: { id: string },
-      context: MyContext
+      context: MyContext,
     ) => {
       if (context.user?.role !== "ADMIN") {
         return false;

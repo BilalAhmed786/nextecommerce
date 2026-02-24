@@ -10,7 +10,7 @@ const mediafilter = ({ categories, priceRanges }: any) => {
     <div className="overflow-auto">
       <button
         onClick={() => settoggle(true)}
-        className="fixed -left-1 text-sm bg-amber-600 px-2 py-1 text-white rotate-90 animate-bounce z-30"
+        className="fixed -left-1 text-sm bg-amber-600 px-2 py-1 text-white rotate-90 animate-bounce z-50"
       >
         Filter
       </button>

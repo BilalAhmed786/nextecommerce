@@ -63,19 +63,33 @@ export const create_poroduct = gql`
 `;
 
 export const get_products = gql`
-  query ($skip: Int, $take: Int) {
-    products(skip: $skip, take: $take) {
+  query getProducts(
+    $skip: Int
+    $take: Int
+    $category: String
+    $minPrice: Float
+    $maxPrice: Float
+    $search: String
+  ) {
+    products(
+      skip: $skip
+      take: $take
+      category: $category
+      minPrice: $minPrice
+      maxPrice: $maxPrice
+      search: $search
+    ) {
       id
       name
       description
       stock
       price
       image
+      categoryId
       category {
         id
         name
       }
-      categoryId
       images {
         url
       }

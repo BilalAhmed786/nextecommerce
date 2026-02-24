@@ -89,8 +89,16 @@ input CreateProductInput {
 
   type Query {
     # for product
-    products(skip: Int, take: Int): [Product!]!
-    getSingleproduct(id: String!): Product
+    products(
+    skip: Int
+    take: Int
+    category: String
+    minPrice: Float
+    maxPrice: Float
+    search: String
+  ): [Product!]!
+    
+  getSingleproduct(id: String!): Product
 
     # for category
     categories: [Category!]!
