@@ -27,38 +27,43 @@ export default function Shopcontent() {
   const [products, setProducts] = useState<any[]>([]);
   const [skip, setSkip] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
+
   const { data: categories } = useQuery(get_category);
   const { data: pricefilter } = useQuery(get_price_filter);
   const searchParams = useSearchParams();
 
-    //parse price into range
-    const { minPrice, maxPrice } = parsePriceRange(price);
-  
-  
+  const { minPrice, maxPrice } = parsePriceRange(price);
+
+  // Update filters from query params
   useEffect(() => {
     setCategory(searchParams?.get("category") ?? null);
     setPrice(searchParams?.get("price") ?? null);
     setSearch(searchParams?.get("search") ?? null);
-  }, [searchParams])
- 
-  
+  }, [searchParams]);
 
   const [loadProducts, { loading }] = useLazyQuery(get_products, {
     onCompleted: (res) => {
+      setInitialLoadDone(true);
+
       if (!res?.products?.length) {
         setHasMore(false);
+        if (skip === 0) setProducts([]); // explicitly set empty on first load
         return;
       }
+
       setProducts((prev) => [...prev, ...res.products]);
       setSkip((prev) => prev + 3);
     },
+    fetchPolicy: "network-only",
   });
 
-  // ✅ Reset & refetch when filters change
+  // Reset products on filter change
   useEffect(() => {
     setProducts([]);
     setSkip(0);
     setHasMore(true);
+    setInitialLoadDone(false);
 
     loadProducts({
       variables: {
@@ -72,14 +77,15 @@ export default function Shopcontent() {
     });
   }, [category, price, search]);
 
-  // ✅ Infinite scroll
+  // Infinite scroll
   useEffect(() => {
     const onScroll = () => {
       if (
         window.innerHeight + window.scrollY >=
           document.body.offsetHeight - 300 &&
         hasMore &&
-        !loading
+        !loading &&
+        products.length > 0 // 🔹 only scroll if we have some products
       ) {
         loadProducts({
           variables: {
@@ -96,29 +102,43 @@ export default function Shopcontent() {
 
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
-  }, [skip, hasMore, loading]);
+  }, [skip, hasMore, loading, category, price, search, products]);
 
   return (
     <div className="flex m-5 min-h-screen">
+      {/* Sidebar always separate */}
       <Sidebar categories={categories?.categories} priceRanges={pricefilter} />
 
-      <main className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-        {products.length ? (
-          products.map((product,index) => (
-            <div  key={`${product.id}-${index}`} className="p-2">
-              <Link href={`/singleproduct/${product.id}`}>
-                <img src={product.image} className="w-full h-80 object-cover" />
-              </Link>
-              <Shopicons product={product} />
-              <Shopbutton product={product} />
-              <h2>{product.name}</h2>
-              <p>${product.price}</p>
-            </div>
-          ))
-        ) : (
-          <p className="col-span-full text-center">No products found</p>
+      <main className="flex-1 m-5">
+        {loading && products.length === 0 && (
+          <p className="text-center mt-10">Loading products...</p>
         )}
 
+        {!loading && initialLoadDone && products.length === 0 && (
+          <p className="flex flex-col h-screen justify-center items-center text-black">No products found</p>
+        )}
+
+        {products.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {products.map((product, index) => (
+              <div key={`${product.id}-${index}`} className="p-2">
+                <Link href={`/singleproduct/${product.id}`}>
+                  <img
+                    src={product.image}
+                    className="w-full h-80 object-cover"
+                    alt={product.name}
+                  />
+                </Link>
+                <Shopicons product={product} />
+                <Shopbutton product={product} />
+                <h2>{product.name}</h2>
+                <p>${product.price}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Cart Sidebar */}
         <Cartsidebar />
       </main>
     </div>
