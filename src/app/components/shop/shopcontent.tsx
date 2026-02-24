@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useLazyQuery, useQuery } from "@apollo/client";
@@ -21,19 +20,28 @@ function parsePriceRange(price: string | null) {
 }
 
 export default function Shopcontent() {
-  const searchParams = useSearchParams();
-  const category = searchParams?.get("category") ?? null;
-  const price = searchParams?.get("price") ?? null;
-  const search = searchParams?.get("search") ?? null;
-
-  const { minPrice, maxPrice } = parsePriceRange(price);
+  const [category, setCategory] = useState<string | null>(null);
+  const [price, setPrice] = useState<string | null>(null);
+  const [search, setSearch] = useState<string | null>(null);
 
   const [products, setProducts] = useState<any[]>([]);
   const [skip, setSkip] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-
   const { data: categories } = useQuery(get_category);
   const { data: pricefilter } = useQuery(get_price_filter);
+  const searchParams = useSearchParams();
+
+    //parse price into range
+    const { minPrice, maxPrice } = parsePriceRange(price);
+  
+  
+  useEffect(() => {
+    setCategory(searchParams?.get("category") ?? null);
+    setPrice(searchParams?.get("price") ?? null);
+    setSearch(searchParams?.get("search") ?? null);
+  }, [searchParams])
+ 
+  
 
   const [loadProducts, { loading }] = useLazyQuery(get_products, {
     onCompleted: (res) => {
