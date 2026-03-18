@@ -57,7 +57,6 @@ export default function Shopcontent() {
     onError: () => {
       isFetchingRef.current = false;
     },
-    fetchPolicy: "network-only",
   });
 
   // Reset & load first page when filters change
