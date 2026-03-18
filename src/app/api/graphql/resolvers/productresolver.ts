@@ -56,6 +56,8 @@ export const productresolvers = {
         },
       });
     },
+    
+    
     getSingleproduct: async (_: any, args: { id: string }) => {
       const { id } = args;
 
@@ -71,13 +73,17 @@ export const productresolvers = {
       }
     },
 
+    
     categories: async () => {
       return await prisma.category.findMany();
     },
 
+    
     shipments: async () => {
       return await prisma.shippingRate.findMany();
     },
+    
+    
     pricefilter: async () => {
       return await prisma.priceFilter.findMany();
     },

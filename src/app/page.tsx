@@ -11,5 +11,5 @@ export default async function ShopPage() {
 
   const filterdata = data.products.filter((prod:any)=>prod.stock !== 0)
 
-  return <Shopcontent initialProducts={filterdata} />;
+  return <Shopcontent />;
 }
