@@ -1,154 +1,148 @@
-'use client';
-import { useEffect, useState, useCallback } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useLazyQuery, useQuery } from '@apollo/client';
-import { get_products, get_category, get_price_filter } from '@/app/graphql/product';
+"use client";
 
-import Shopbutton from '../../reusablecomponent/shopbutton';
-import Shopicons from './shopicons';
-import Cartsidebar from '../../reusablecomponent/cartsidebar';
-import Sidebar from './sidebar';
-import Link from 'next/link';
+import { useEffect, useState, useRef } from "react";
+import { useSearchParams } from "next/navigation";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { get_products, get_category, get_price_filter } from "@/app/graphql/product";
+import Sidebar from "./sidebar";
+import Shopbutton from "../../reusablecomponent/shopbutton";
+import Shopicons from "./shopicons";
+import Cartsidebar from "../../reusablecomponent/cartsidebar";
+import Link from "next/link";
 
-
-function parsePriceRange(price: string | null | undefined) {
+function parsePriceRange(price: string | null) {
   if (!price) return { minPrice: null, maxPrice: null };
-  const [min, max] = price.split('-').map(Number);
+  const [min, max] = price.split("-").map(Number);
   return { minPrice: min, maxPrice: max };
 }
 
-export default function Shopcontent({ initialProducts }: { initialProducts: any[] }) {
-  const searchParams = useSearchParams();
-  const category = searchParams?.get('category');
-  const price = searchParams?.get('price');
-  const search = searchParams?.get('search');
+export default function Shopcontent() {
+  const [category, setCategory] = useState<string | null>(null);
+  const [price, setPrice] = useState<string | null>(null);
+  const [search, setSearch] = useState<string | null>(null);
 
-  const selectedCategory = category;
-  const selectedPrice = parsePriceRange(price);
-  const searchitem = search;
-
-  const [products, setProducts] = useState(initialProducts);
-  const [skip, setSkip] = useState(3);
+  const [products, setProducts] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(true);
-  const [newlyAddedIndex, setNewlyAddedIndex] = useState<number | null>(null);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
 
-  const { data: pricefilter } = useQuery(get_price_filter);
+  const skipRef = useRef(0);      
+  const isFetchingRef = useRef(false); 
+
   const { data: categories } = useQuery(get_category);
+  const { data: pricefilter } = useQuery(get_price_filter);
+  const searchParams = useSearchParams();
 
-  const [loadMoreProducts, { loading }] = useLazyQuery(get_products, {
+  const { minPrice, maxPrice } = parsePriceRange(price);
+
+  useEffect(() => {
+    setCategory(searchParams?.get("category") ?? null);
+    setPrice(searchParams?.get("price") ?? null);
+    setSearch(searchParams?.get("search") ?? null);
+  }, [searchParams]);
+
+  const [loadProducts] = useLazyQuery(get_products, {
+    fetchPolicy: "network-only",
     onCompleted: (res) => {
-      if (res?.products?.length === 0) {
-        setHasMore(false);
-      } else {
-        const startIndex = products.length;
-        setProducts((prev) => [...prev, ...res.products]);
-        setSkip((prev) => prev + 3);
-        setNewlyAddedIndex(startIndex);
+      isFetchingRef.current = false;
+      setInitialLoadDone(true);
 
+      if (!res?.products?.length) {
+        setHasMore(false);
+        return;
       }
+
+      setProducts((prev) => [...prev, ...res.products]);
+      skipRef.current += 3; 
+    },
+    onError: () => {
+      isFetchingRef.current = false;
     },
   });
 
-  const filterProducts = useCallback(
-    (data: any[]) => {
-      const hasMin = selectedPrice.minPrice != null;
-      const hasMax = selectedPrice.maxPrice != null;
-
-      return data.filter((product) => {
-        const matchesCategory = selectedCategory ? product.category.id === selectedCategory : true;
-        const matchesPrice =
-          hasMin && hasMax
-            ? product.price >= selectedPrice.minPrice && product.price <= selectedPrice.maxPrice
-            : true;
-        const matchesSearch = searchitem
-          ? product.name.toLowerCase().includes(searchitem.toLowerCase())
-          : true;
-
-        return matchesCategory && matchesPrice && matchesSearch;
-      });
-    },
-    [selectedCategory, selectedPrice, searchitem]
-  );
-
-  const filtered = filterProducts(products);
-
+  // Reset & load first page when filters change
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = document.documentElement.scrollTop;
-      const scrollHeight = document.documentElement.scrollHeight;
-      const clientHeight = document.documentElement.clientHeight;
+    setProducts([]);
+    skipRef.current = 0;  
+    setHasMore(true);
+    setInitialLoadDone(false);
+    isFetchingRef.current = true;
 
-      if (scrollTop + clientHeight >= scrollHeight - 300 && hasMore && !loading) {
+    loadProducts({
+      variables: {
+        skip: 0,
+        take: 3,
+        category,
+        minPrice,
+        maxPrice,
+        search,
+      },
+    });
+  }, [category, price, search]);
 
-        loadMoreProducts({ variables: { skip, take: 3} });
+  // Infinite Scroll
+  useEffect(() => {
+    const onScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 300 &&
+        hasMore &&
+        !isFetchingRef.current
+      ) {
+        isFetchingRef.current = true;
 
+        loadProducts({
+          variables: {
+            skip: skipRef.current,
+            take: 3,
+            category,
+            minPrice,
+            maxPrice,
+            search,
+          },
+        });
       }
     };
 
-
-    window.addEventListener('scroll', handleScroll);
-
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [skip, hasMore, loading, loadMoreProducts]);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [hasMore, category, minPrice, maxPrice, search]);
 
   return (
-    <div className="flex m-5 mt-30 mb-20 min-h-screen">
-     
-
+    <div className="flex m-5 min-h-screen">
       <Sidebar categories={categories?.categories} priceRanges={pricefilter} />
 
-      <div className="block w-[95%] m-auto">
-        
-        <main className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
-          {filtered?.length > 0 ? (
-            filtered.map((product: any, i: number) => {
-              const isNew = newlyAddedIndex !== null && i >= newlyAddedIndex;
+      <main className="flex-1 m-5">
+        {!initialLoadDone && products.length === 0 && (
+          <p className="text-center mt-10">Loading products...</p>
+        )}
 
-              return (
-                <div
-                  key={i}
-                  className={`p-2 rounded transition-all duration-1000 ease-in hover:scale-105
-                  ${isNew ? 'translate-y-7 opacity-100' : ''}`}
-                >
-                  <div className="relative group">
-                    <div className="hidden md:hidden lg:block">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-85 object-cover mb-2 rounded"
-                      />
-                    </div>
-                    <div className="block md:block lg:hidden">
-                      <Link href={`/singleproduct/${product.id}`}>
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-85 object-cover mb-2 rounded"
-                        />
-                      </Link>
-                    </div>
-                    <Shopicons product={product} />
-                  </div>
+        {initialLoadDone && products.length === 0 && (
+          <p className="flex flex-col h-screen justify-center items-center">
+            No products found
+          </p>
+        )}
 
-                  <div className="block md:block lg:hidden">
-                    <Shopbutton product={product} />
-                  </div>
-                  <h2 className="font-medium text-[14px]">{product.name}</h2>
-                  <p className="text-gray-600">${product.price}</p>
-                  <p className="text-sm text-gray-500">{product.category.name}</p>
-                </div>
-              );
-            })
-          ) : (
-            <p className="text-gray-500 col-span-full text-center">No products found.</p>
-          )}
+        {products.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {products.map((product, index) => (
+              <div key={`${product.id}-${index}`} className="p-2">
+                <Link href={`/singleproduct/${product.id}`}>
+                  <img
+                    src={product.image}
+                    className="w-full h-80 object-cover"
+                    alt={product.name}
+                  />
+                </Link>
+                <Shopicons product={product} />
+                <Shopbutton product={product} />
+                <h2>{product.name}</h2>
+                <p>${product.price}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
-          <Cartsidebar />
-        </main>
-
-       
-      </div>
+        <Cartsidebar />
+      </main>
     </div>
   );
 }
