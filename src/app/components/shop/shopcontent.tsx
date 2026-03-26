@@ -3,7 +3,11 @@
 import { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { get_products, get_category, get_price_filter } from "@/app/graphql/product";
+import {
+  get_products,
+  get_category,
+  get_price_filter,
+} from "@/app/graphql/product";
 import Sidebar from "./sidebar";
 import Shopbutton from "../../reusablecomponent/shopbutton";
 import Shopicons from "./shopicons";
@@ -12,7 +16,13 @@ import Link from "next/link";
 
 function parsePriceRange(price: string | null) {
   if (!price) return { minPrice: null, maxPrice: null };
-  const [min, max] = price.split("-").map(Number);
+
+  const [min, max] = price.split("+-+").map(Number);
+
+  if (Number.isNaN(min) || Number.isNaN(max)) {
+    return { minPrice: null, maxPrice: null };
+  }
+
   return { minPrice: min, maxPrice: max };
 }
 
@@ -25,8 +35,8 @@ export default function Shopcontent() {
   const [hasMore, setHasMore] = useState(true);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
 
-  const skipRef = useRef(0);      
-  const isFetchingRef = useRef(false); 
+  const skipRef = useRef(0);
+  const isFetchingRef = useRef(false);
 
   const { data: categories } = useQuery(get_category);
   const { data: pricefilter } = useQuery(get_price_filter);
@@ -34,6 +44,7 @@ export default function Shopcontent() {
 
   const { minPrice, maxPrice } = parsePriceRange(price);
 
+  /* READ URL PARAMS */
   useEffect(() => {
     setCategory(searchParams?.get("category") ?? null);
     setPrice(searchParams?.get("price") ?? null);
@@ -52,17 +63,17 @@ export default function Shopcontent() {
       }
 
       setProducts((prev) => [...prev, ...res.products]);
-      skipRef.current += 3; 
+      skipRef.current += 3;
     },
     onError: () => {
       isFetchingRef.current = false;
     },
   });
 
-  // Reset & load first page when filters change
+  /* RESET ON FILTER CHANGE */
   useEffect(() => {
     setProducts([]);
-    skipRef.current = 0;  
+    skipRef.current = 0;
     setHasMore(true);
     setInitialLoadDone(false);
     isFetchingRef.current = true;
@@ -79,11 +90,12 @@ export default function Shopcontent() {
     });
   }, [category, price, search]);
 
-  // Infinite Scroll
+  /* INFINITE SCROLL */
   useEffect(() => {
     const onScroll = () => {
       if (
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 300 &&
+        window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 300 &&
         hasMore &&
         !isFetchingRef.current
       ) {
@@ -108,7 +120,10 @@ export default function Shopcontent() {
 
   return (
     <div className="flex m-5 min-h-screen">
-      <Sidebar categories={categories?.categories} priceRanges={pricefilter} />
+      <Sidebar
+        categories={categories?.categories}
+        priceRanges={pricefilter}
+      />
 
       <main className="flex-1 m-5">
         {!initialLoadDone && products.length === 0 && (
@@ -116,7 +131,7 @@ export default function Shopcontent() {
         )}
 
         {initialLoadDone && products.length === 0 && (
-          <p className="flex flex-col h-screen justify-center items-center">
+          <p className="flex h-screen justify-center items-center">
             No products found
           </p>
         )}
@@ -132,6 +147,7 @@ export default function Shopcontent() {
                     alt={product.name}
                   />
                 </Link>
+
                 <Shopicons product={product} />
                 <Shopbutton product={product} />
                 <h2>{product.name}</h2>
