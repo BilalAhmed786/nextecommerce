@@ -1,14 +1,31 @@
-"use client";
+'use client';
 
 import { Range } from "react-range";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const MIN = 0;
-const MAX = 5000;
-const STEP = 100;
 
-export default function FilterForm({ categories }: any) {
-  const [values, setValues] = useState<[number, number]>([2000, 3000]);
+export default function FilterForm({ categories, priceRanges }: any) {
+  // Default values if priceRanges is empty
+  const defaultMin = 0;
+  const defaultMax = 5000;
+
+  const [values, setValues] = useState<[number, number]>([defaultMin, defaultMax]);
+  const [min, setMin] = useState(defaultMin);
+  const [max, setMax] = useState(defaultMax);
+
+  // Parse backend priceRanges on mount
+  useEffect(() => {
+    if (priceRanges && priceRanges.length > 0) {
+      
+      const rangeStr = priceRanges[0].amount; // e.g. "2000 - 3000"
+      const [minPrice, maxPrice] = rangeStr.split(" - ").map(Number);
+      setValues([minPrice, maxPrice]);
+      setMin(minPrice);
+      setMax(maxPrice);
+    }
+  }, [priceRanges]);
+
+  const step = 100;
 
   return (
     <form method="get" className="flex flex-col gap-6">
@@ -30,21 +47,18 @@ export default function FilterForm({ categories }: any) {
 
         <Range
           values={values}
-          step={STEP}
-          min={MIN}
-          max={MAX}
+          step={step}
+          min={min}
+          max={max}
           onChange={(vals) => setValues(vals as [number, number])}
           renderTrack={({ props, children }) => (
-            <div
-              {...props}
-              className="h-1 bg-gray-200 rounded w-full"
-            >
+            <div {...props} className="h-1 bg-gray-200 rounded w-full">
               {children}
             </div>
           )}
           renderThumb={({ props }) => (
             <div
-              {...props} 
+              {...props}
               className="h-3 w-3 bg-amber-500 rounded-full shadow cursor-pointer"
             />
           )}
