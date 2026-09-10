@@ -80,7 +80,6 @@ export default function ProductSlider({ images }: Props) {
                 <div className="flex h-[280px] items-center justify-center p-6 sm:h-[450px]">
                   <InnerImageZoom
                     src={image}
-                    alt={`Product image ${index + 1}`}
                     zoomType="hover"
                     zoomScale={1.5}
                     zoomPreload
