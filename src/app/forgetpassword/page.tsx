@@ -48,7 +48,7 @@ export default function ForgetPasswordForm() {
   };
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#080808] px-4 py-12 mt-14">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#080808] mt-30 lg:mt-14 md:mt-28">
       {/* Background glow */}
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-500/10 blur-[120px]" />
 
@@ -74,7 +74,7 @@ export default function ForgetPasswordForm() {
         </div>
 
         {/* Card */}
-        <div className="rounded-3xl border border-white/10 bg-[#111111] p-7 shadow-2xl shadow-black/40 sm:p-9">
+        <div className="rounded-3xl border border-white/10 bg-[#111111] p-4 shadow-2xl shadow-black/40">
           {/* Icon */}
           <div className="mb-6 flex justify-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-amber-400/20 bg-amber-400/10 text-3xl text-amber-400 shadow-lg shadow-amber-500/5">

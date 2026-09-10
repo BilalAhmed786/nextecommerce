@@ -160,7 +160,7 @@ className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#111] text-wh
 
 ];
 
-return ( <div className="min-h-screen w-full bg-[#f7f7f5] px-4 py-10 md:px-8"> <div className="mx-auto mt-10 w-full max-w-6xl"> <div className="mb-10 border-b border-gray-200 pb-6"> <p className="mb-2 text-sm font-semibold uppercase tracking-[0.25em] text-amber-600">
+return ( <div className="min-h-screen w-full bg-[#f7f7f5] p-4 mt-28 lg:mt-16 sm:mt-28"> <div className="mx-auto mt-10 w-full max-w-6xl"> <div className="mb-10 border-b border-gray-200 pb-6"> <p className="mb-2 text-sm font-semibold uppercase tracking-[0.25em] text-amber-600">
 Shipping Management </p>
 
 

@@ -254,7 +254,7 @@ export default function EditProductForm() {
   const currentProduct = productData?.getSingleproduct;
 
   return (
-    <div className="min-h-screen bg-[#f7f7f5] px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#f7f7f5] p-4 mt-34 lg:mt-24 md:mt-34">
 
       <div className="max-w-7xl mx-auto">
 

@@ -2,12 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import {
-  FaMinus,
-  FaPlus,
-  FaTrashAlt,
-  FaShoppingBag,
-} from "react-icons/fa";
+import { FaMinus, FaPlus, FaTrashAlt, FaShoppingBag } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 
 import { CartItem } from "../types/layouttype";
@@ -22,10 +17,7 @@ export interface Props {
   setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
 }
 
-export default function CartContents({
-  setCartItems,
-  cartItems,
-}: Props) {
+export default function CartContents({ setCartItems, cartItems }: Props) {
   const pathname = usePathname();
 
   const pathSegments = pathname?.split("/");
@@ -39,16 +31,14 @@ export default function CartContents({
     return cleanup;
   }, [setCartItems]);
 
-  const grandTotal = cartItems.reduce(
-    (sum, item) => sum + item.total,
-    0
-  ).toFixed(2);
+  const grandTotal = cartItems
+    .reduce((sum, item) => sum + item.total, 0)
+    .toFixed(2);
 
   const isCartPage = lastSegment === "cart";
 
   return (
     <div className="w-full">
-
       {/* EMPTY CART */}
       {cartItems.length === 0 ? (
         <div
@@ -83,13 +73,12 @@ export default function CartContents({
               isCartPage ? "text-gray-500" : "text-gray-400"
             }`}
           >
-            Looks like you haven&apos;t added anything to your bag yet.
-            Explore our collection and find something you love.
+            Looks like you haven&apos;t added anything to your bag yet. Explore
+            our collection and find something you love.
           </p>
         </div>
       ) : (
         <div className="px-2 pb-6 sm:px-4">
-
           {/* CART ITEMS */}
           <div className="space-y-4">
             {cartItems.map((item) => (
@@ -102,7 +91,6 @@ export default function CartContents({
                 }`}
               >
                 <div className="flex gap-4">
-
                   {/* PRODUCT IMAGE */}
                   <div
                     className={`relative h-24 w-24 shrink-0 overflow-hidden rounded-xl ${
@@ -121,15 +109,11 @@ export default function CartContents({
 
                   {/* PRODUCT DETAILS */}
                   <div className="min-w-0 flex-1">
-
                     <div className="flex items-start justify-between gap-3">
-
                       <div className="min-w-0">
                         <h3
                           className={`line-clamp-2 text-sm font-semibold leading-5 ${
-                            isCartPage
-                              ? "text-gray-900"
-                              : "text-white"
+                            isCartPage ? "text-gray-900" : "text-white"
                           }`}
                         >
                           {item.name}
@@ -137,9 +121,7 @@ export default function CartContents({
 
                         <p
                           className={`mt-1 text-xs ${
-                            isCartPage
-                              ? "text-gray-500"
-                              : "text-gray-400"
+                            isCartPage ? "text-gray-500" : "text-gray-400"
                           }`}
                         >
                           ${item.price} each
@@ -167,17 +149,15 @@ export default function CartContents({
                     </div>
 
                     {/* BOTTOM ROW */}
-                    <div className="mt-4 flex items-center justify-between gap-3">
-
+                    <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
                       {/* QUANTITY */}
                       <div
-                        className={`flex h-9 items-center overflow-hidden rounded-xl border ${
+                        className={`flex h-9 shrink-0 items-center overflow-hidden rounded-xl border ${
                           isCartPage
                             ? "border-gray-200 bg-gray-50"
                             : "border-white/10 bg-black/20"
                         }`}
                       >
-                        {/* MINUS */}
                         <button
                           type="button"
                           onClick={() =>
@@ -187,7 +167,7 @@ export default function CartContents({
                             })
                           }
                           aria-label="Decrease quantity"
-                          className={`flex h-9 w-9 items-center justify-center transition-all duration-200 ${
+                          className={`flex h-9 w-9 shrink-0 items-center justify-center ${
                             isCartPage
                               ? "text-gray-500 hover:bg-amber-50 hover:text-amber-600"
                               : "text-gray-400 hover:bg-white/10 hover:text-white"
@@ -196,9 +176,8 @@ export default function CartContents({
                           <FaMinus className="text-[9px]" />
                         </button>
 
-                        {/* QUANTITY */}
                         <span
-                          className={`flex h-9 min-w-10 items-center justify-center border-x text-sm font-semibold ${
+                          className={`flex h-9 min-w-10 shrink-0 items-center justify-center border-x text-sm font-semibold ${
                             isCartPage
                               ? "border-gray-200 bg-white text-gray-900"
                               : "border-white/10 text-white"
@@ -207,7 +186,6 @@ export default function CartContents({
                           {item.Qty}
                         </span>
 
-                        {/* PLUS */}
                         <button
                           type="button"
                           onClick={() =>
@@ -218,7 +196,7 @@ export default function CartContents({
                             })
                           }
                           aria-label="Increase quantity"
-                          className={`flex h-9 w-9 items-center justify-center transition-all duration-200 ${
+                          className={`flex h-9 w-9 shrink-0 items-center justify-center ${
                             isCartPage
                               ? "text-gray-500 hover:bg-amber-50 hover:text-amber-600"
                               : "text-gray-400 hover:bg-white/10 hover:text-amber-400"
@@ -228,12 +206,10 @@ export default function CartContents({
                         </button>
                       </div>
 
-                      {/* ITEM TOTAL */}
+                      {/* TOTAL */}
                       <p
-                        className={`text-base font-bold ${
-                          isCartPage
-                            ? "text-gray-900"
-                            : "text-amber-400"
+                        className={`shrink-0 text-base font-bold ${
+                          isCartPage ? "text-gray-900" : "text-amber-400"
                         }`}
                       >
                         ${item.total}
@@ -267,8 +243,7 @@ export default function CartContents({
                   isCartPage ? "text-gray-700" : "text-gray-300"
                 }`}
               >
-                {cartItems.length}{" "}
-                {cartItems.length === 1 ? "item" : "items"}
+                {cartItems.length} {cartItems.length === 1 ? "item" : "items"}
               </span>
             </div>
 
@@ -303,10 +278,7 @@ export default function CartContents({
         </div>
       )}
 
-      <Cartnotification
-        valid={valid}
-        setValid={setValid}
-      />
+      <Cartnotification valid={valid} setValid={setValid} />
     </div>
   );
 }

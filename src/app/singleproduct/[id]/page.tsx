@@ -90,7 +90,7 @@ export default async function ProductPage({
   ];
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#f7f7f5] pb-12 sm:pb-20 mt-16">
+    <main className="min-h-screen overflow-x-hidden bg-[#f7f7f5] pb-12 sm:pb-20 mt-32 lg:mt-14 md:mt-32">
 
       {/* ================= HERO ================= */}
       <section className="relative overflow-hidden">

@@ -117,7 +117,7 @@ const statusStyle = getStatusStyles();
 const orderTotal = Number(order.total || 0);
 const shippingCost = Number(order.shippingCost || 0);
 
-return ( <div className="min-h-screen bg-[#f7f7f5] px-4 py-8 sm:px-6 lg:px-8"> <div className="mx-auto max-w-6xl">
+return ( <div className="min-h-screen bg-[#f7f7f5] p-4 mt-32 lg:mt-20 sm:mt-32"> <div className="mx-auto max-w-6xl">
 
 
     {/* Header */}

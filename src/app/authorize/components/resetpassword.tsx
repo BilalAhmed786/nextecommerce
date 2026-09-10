@@ -66,7 +66,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen -mt-2 items-center justify-center overflow-hidden bg-[#080808] py-16">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#080808] p-4 mt-28 lg:mt-16 sm:mt-28">
 
       {/* Background glow */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-amber-500/10 blur-[120px]" />

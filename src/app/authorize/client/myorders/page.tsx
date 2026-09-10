@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useQuery } from '@apollo/client';
-import { order_by_email } from '@/app/graphql/orders';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Reactdatatable from '../../components/datatable';
-import Searchdatatable from '../../components/searchdatatable';
-import { useSession } from 'next-auth/react';
+import { useQuery } from "@apollo/client";
+import { order_by_email } from "@/app/graphql/orders";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Reactdatatable from "../../components/datatable";
+import Searchdatatable from "../../components/searchdatatable";
+import { useSession } from "next-auth/react";
 import {
   FaEye,
   FaShoppingBag,
@@ -14,11 +14,11 @@ import {
   FaCheckCircle,
   FaTimesCircle,
   FaCreditCard,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
 export default function MyOrdersPage() {
   const router = useRouter();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const { data: session, status } = useSession();
 
   const { data, loading, error } = useQuery(order_by_email, {
@@ -28,9 +28,9 @@ export default function MyOrdersPage() {
     skip: !session?.user.email,
   });
 
-  if (status === 'loading' || loading) {
+  if (status === "loading" || loading) {
     return (
-      <div className="mt-20 flex min-h-[70vh] items-center justify-center bg-[#f7f7f5]">
+      <div className="flex min-h-[70vh] items-center justify-center bg-[#f7f7f5]">
         <div className="text-center">
           <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-amber-500" />
           <p className="text-sm font-semibold text-gray-500">
@@ -46,12 +46,8 @@ export default function MyOrdersPage() {
       <div className="mt-20 flex min-h-[70vh] items-center justify-center bg-[#f7f7f5] px-4">
         <div className="rounded-2xl border border-red-100 bg-white px-8 py-7 text-center shadow-sm">
           <FaTimesCircle className="mx-auto mb-3 text-2xl text-red-500" />
-          <p className="font-bold text-gray-900">
-            Unable to load orders
-          </p>
-          <p className="mt-1 text-sm text-gray-500">
-            {error.message}
-          </p>
+          <p className="font-bold text-gray-900">Unable to load orders</p>
+          <p className="mt-1 text-sm text-gray-500">{error.message}</p>
         </div>
       </div>
     );
@@ -71,11 +67,11 @@ export default function MyOrdersPage() {
   });
 
   const getStatusIcon = (status: any) => {
-    if (status === 'DELIVERED') {
+    if (status === "DELIVERED") {
       return <FaCheckCircle />;
     }
 
-    if (status === 'CANCELLED') {
+    if (status === "CANCELLED") {
       return <FaTimesCircle />;
     }
 
@@ -83,66 +79,62 @@ export default function MyOrdersPage() {
   };
 
   const getStatusClass = (status: any) => {
-    if (status === 'DELIVERED') {
-      return 'bg-green-50 text-green-600 border-green-100';
+    if (status === "DELIVERED") {
+      return "bg-green-50 text-green-600 border-green-100";
     }
 
-    if (status === 'CANCELLED') {
-      return 'bg-red-50 text-red-600 border-red-100';
+    if (status === "CANCELLED") {
+      return "bg-red-50 text-red-600 border-red-100";
     }
 
-    if (status === 'SHIPPED') {
-      return 'bg-blue-50 text-blue-600 border-blue-100';
+    if (status === "SHIPPED") {
+      return "bg-blue-50 text-blue-600 border-blue-100";
     }
 
-    return 'bg-amber-50 text-amber-600 border-amber-100';
+    return "bg-amber-50 text-amber-600 border-amber-100";
   };
 
   const columns = [
     {
-      name: 'Order',
+      name: "Order",
       selector: (row: any) => row.id,
       sortable: true,
       cell: (row: any) => (
         <div className="flex items-center gap-3 py-2">
-          <div className="
+          <div
+            className="
             flex h-10 w-10 shrink-0 items-center justify-center
             rounded-xl bg-black text-amber-400
-          ">
+          "
+          >
             <FaShoppingBag size={15} />
           </div>
 
           <div>
-            <p className="font-bold text-gray-900">
-              #{row.id?.slice(-8)}
-            </p>
+            <p className="font-bold text-gray-900">#{row.id?.slice(-8)}</p>
 
-            <p className="text-[10px] text-gray-400">
-              Order ID
-            </p>
+            <p className="text-[10px] text-gray-400">Order ID</p>
           </div>
         </div>
       ),
     },
 
     {
-      name: 'Customer',
+      name: "Customer",
       selector: (row: any) => row.address?.name,
       sortable: true,
       cell: (row: any) => (
         <div>
           <p className="font-semibold text-gray-800">
-            {row.address?.name || 'N/A'}
+            {row.address?.name || "N/A"}
           </p>
-          <p className="text-xs text-gray-400">
-            {row.address?.email || ''}
-          </p>
+          <p className="text-xs text-gray-400">{row.address?.email || ""}</p>
         </div>
       ),
     },
 
     {
-      name: 'Total',
+      name: "Total",
       selector: (row: any) => row.total,
       sortable: true,
       cell: (row: any) => (
@@ -153,16 +145,18 @@ export default function MyOrdersPage() {
     },
 
     {
-      name: 'Payment',
+      name: "Payment",
       selector: (row: any) => row.payment,
       sortable: true,
       cell: (row: any) => (
-        <div className="
+        <div
+          className="
           flex items-center gap-2
           rounded-lg bg-gray-50
           px-3 py-2
           text-xs font-bold text-gray-600
-        ">
+        "
+        >
           <FaCreditCard className="text-gray-400" />
           {row.payment}
         </div>
@@ -170,7 +164,7 @@ export default function MyOrdersPage() {
     },
 
     {
-      name: 'Status',
+      name: "Status",
       selector: (row: any) => row.status,
       sortable: true,
       cell: (row: any) => (
@@ -190,15 +184,11 @@ export default function MyOrdersPage() {
     },
 
     {
-      name: 'Action',
+      name: "Action",
       cell: (row: any) => (
         <button
           type="button"
-          onClick={() =>
-            router.push(
-              `/authorize/client/myorders/${row.id}`
-            )
-          }
+          onClick={() => router.push(`/authorize/client/myorders/${row.id}`)}
           className="
             flex h-9 w-9 items-center justify-center
             rounded-xl
@@ -220,28 +210,33 @@ export default function MyOrdersPage() {
   ];
 
   return (
-    <main className="mt-20 min-h-screen bg-[#f7f7f5] px-4 py-8 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[#f7f7f5] p-4 mt-32 lg:mt-20 sm:mt-32">
       <div className="mx-auto max-w-7xl">
-
         {/* Header */}
-        <div className="
+        <div
+          className="
           mb-8 flex flex-col gap-5
           sm:flex-row sm:items-end sm:justify-between
-        ">
+        "
+        >
           <div>
-            <div className="
+            <div
+              className="
               mb-2 flex items-center gap-2
               text-xs font-bold uppercase
               tracking-[0.25em] text-amber-600
-            ">
+            "
+            >
               <FaShoppingBag />
               Your Account
             </div>
 
-            <h1 className="
+            <h1
+              className="
               text-3xl font-black tracking-tight
               text-gray-950 sm:text-4xl
-            ">
+            "
+            >
               My Orders
             </h1>
 
@@ -250,16 +245,20 @@ export default function MyOrdersPage() {
             </p>
           </div>
 
-          <div className="
+          <div
+            className="
             flex w-fit items-center gap-3
             rounded-2xl border border-gray-200
             bg-white px-5 py-3
             shadow-sm
-          ">
-            <div className="
+          "
+          >
+            <div
+              className="
               flex h-10 w-10 items-center justify-center
               rounded-xl bg-amber-100 text-amber-600
-            ">
+            "
+            >
               <FaShoppingBag />
             </div>
 
@@ -281,61 +280,68 @@ export default function MyOrdersPage() {
         </div>
 
         {/* Orders */}
-        <section className="
+        <section
+          className="
           overflow-hidden
           rounded-2xl
           border border-gray-200
           bg-white
           shadow-sm
-        ">
-          <div className="
+        "
+        >
+          <div
+            className="
             flex flex-col gap-2
             border-b border-gray-100
             px-5 py-4
             sm:flex-row sm:items-center
             sm:justify-between
-          ">
+          "
+          >
             <div>
-              <h2 className="font-bold text-gray-950">
-                Order History
-              </h2>
+              <h2 className="font-bold text-gray-950">Order History</h2>
 
               <p className="mt-0.5 text-xs text-gray-400">
                 {filteredOrders.length} order
-                {filteredOrders.length !== 1 ? 's' : ''} found
+                {filteredOrders.length !== 1 ? "s" : ""} found
               </p>
             </div>
 
             {search && (
-              <div className="
+              <div
+                className="
                 rounded-lg
                 bg-amber-50
                 px-3 py-1.5
                 text-xs font-semibold
                 text-amber-700
-              ">
+              "
+              >
                 Searching: {search}
               </div>
             )}
           </div>
 
-          <div className="overflow-x-auto">
-            <Reactdatatable
-              columns={columns}
-              filterproducts={filteredOrders}
-            />
+          <div className="w-full overflow-x-auto">
+            <div className="min-w-[900px]">
+              <Reactdatatable
+                columns={columns}
+                filterproducts={filteredOrders}
+              />
+            </div>
           </div>
         </section>
 
         {/* Bottom message */}
-        <div className="
+        <div
+          className="
           mt-5 flex items-center justify-center gap-2
           text-xs text-gray-400
-        ">
+        "
+        >
           <FaCheckCircle className="text-amber-500" />
           All your orders are securely stored
         </div>
-
       </div>
     </main>
   );

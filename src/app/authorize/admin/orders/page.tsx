@@ -138,7 +138,7 @@ cell: (row: any) => ( <div className="flex items-center gap-3"> <div className="
 
 ];
 
-return ( <div className="min-h-screen w-full bg-[#f7f7f5] px-4 py-10 md:px-8"> <div className="mx-auto mt-10 w-full max-w-7xl">
+return ( <div className="min-h-screen w-full bg-[#f7f7f5] p-4 mt-28 lg:mt-20 sm:mt-28"> <div className="mx-auto mt-10 w-full max-w-7xl">
 
 
     <div className="mb-10 border-b border-gray-200 pb-7">

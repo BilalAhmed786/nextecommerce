@@ -51,7 +51,7 @@ export default function AboutUsPage() {
   ];
 
   return (
-    <main className="min-h-screen z-10 overflow-hidden bg-[#f7f7f5] text-gray-900">
+    <main className="min-h-screen z-10 overflow-hidden bg-[#f7f7f5] text-gray-900 mt-20 lg:mt-14 md:mt-20">
 
       {/* Hero */}
       <section className="relative z-10 overflow-hidden bg-[#080808] text-white">

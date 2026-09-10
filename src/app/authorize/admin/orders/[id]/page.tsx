@@ -115,7 +115,7 @@ text: "text-amber-700",
 border: "border-amber-200",
 };
 
-return ( <div className="min-h-screen bg-[#f5f5f3] px-4 py-10 md:px-8"> <div className="mx-auto mt-16 max-w-6xl">
+return ( <div className="min-h-screen bg-[#f5f5f3] p-4 mt-28 lg:mt-20 sm:mt-28"> <div className="mx-auto mt-16 max-w-6xl">
 
 
     {/* Header */}

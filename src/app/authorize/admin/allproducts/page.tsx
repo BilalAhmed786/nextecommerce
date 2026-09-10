@@ -109,7 +109,7 @@ export default function ProductTable() {
                                 : stock < 10
                                   ? 'bg-amber-50 text-amber-700'
                                   : 'bg-emerald-50 text-emerald-700'
-                        }`}
+                        } `}
                     >
                         <span
                             className={`w-1.5 h-1.5 rounded-full ${
@@ -248,7 +248,7 @@ export default function ProductTable() {
     }
 
     return (
-        <div className="min-h-screen bg-[#f7f7f5] p-4 sm:p-6 lg:p-8">
+        <div className="min-h-screen bg-[#f7f7f5] p-5 mt-32 lg:mt-20 md:mt-32">
 
             {/* Header */}
             <div className="max-w-[1600px] mx-auto">

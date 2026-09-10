@@ -75,7 +75,7 @@ export default function ResetPasswordForm({
   };
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#080808] px-4 py-12">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#080808] p-4 mt-28 lg:mt-20 sm:mt-28">
       {/* Background glow */}
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-500/10 blur-[120px]" />
 

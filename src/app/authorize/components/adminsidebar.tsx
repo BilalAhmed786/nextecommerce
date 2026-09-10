@@ -339,12 +339,13 @@ const adminsidebar = () => {
           type="button"
           onClick={() => setToggle(true)}
           className="
-            fixed left-4 top-24 z-30
+            fixed -left-8 top-24 z-30
             flex items-center gap-2
             rounded-2xl
             border border-amber-400/20
             bg-[#0a0a0a]
-            px-4 py-3
+            p-4 mt-28 lg:mt-20 sm:mt-28
+            rotate-90
             text-sm font-bold
             text-white
             shadow-xl shadow-black/20

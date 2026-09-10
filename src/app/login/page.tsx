@@ -63,7 +63,7 @@ const LoginPage = () => {
   };
 
   return (
-    <main className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-12 mt-12">
+    <main className="relative min-h-screen flex items-center justify-center overflow-hidden mt-28 lg:mt-14 md:mt-28">
 
       {/* Background Image */}
       <div
@@ -81,7 +81,7 @@ const LoginPage = () => {
       <div className="absolute -bottom-32 -right-32 h-80 w-80 rounded-full bg-orange-500/20 blur-3xl" />
 
       {/* Login Card */}
-      <div className="relative z-10 w-full max-w-md">
+      <div className="relative z-10 w-full max-w-md p-5">
 
         <div className="rounded-3xl border border-white/20 bg-white/95 p-7 shadow-2xl backdrop-blur-xl sm:p-9">
 

@@ -172,7 +172,7 @@ export default function Shopcontent() {
   ]);
 
   return (
-    <div className="min-h-screen mt-14 bg-[#fafafa]">
+    <div className="min-h-screen mt-32 lg:mt-14 md:mt-32 bg-[#fafafa]">
       {/* SHOP HEADER */}
 
       <section className="border-b border-gray-200 bg-white">

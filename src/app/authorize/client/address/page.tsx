@@ -134,7 +134,7 @@ icon: <FaGlobe />,
 },
 ];
 
-return ( <div className="min-h-screen bg-[#f7f7f5] px-4 py-10 mt-16 sm:px-6 lg:px-8"> <div className="mx-auto max-w-5xl">
+return ( <div className="min-h-screen bg-[#f7f7f5] p-4 mt-32 lg:mt-20 sm:mt-32"> <div className="mx-auto max-w-5xl">
 
 
     {/* Header */}

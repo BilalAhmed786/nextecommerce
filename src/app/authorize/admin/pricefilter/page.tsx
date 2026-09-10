@@ -155,7 +155,7 @@ cell: (row: PriceFilter) => ( <div className="flex items-center gap-3"> <div cla
 
 ];
 
-return ( <div className="min-h-screen w-full bg-[#f7f7f5] px-4 py-10 md:px-8"> <div className="mx-auto mt-10 w-full max-w-6xl">
+return ( <div className="min-h-screen w-full bg-[#f7f7f5] p-4 mt-28 lg:mt-20 md:mt-28"> <div className="mx-auto mt-10 w-full max-w-6xl">
 
 
     <div className="mb-10 border-b border-gray-200 pb-7">

@@ -15,7 +15,7 @@ export default function CartPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   return (
-    <main className="min-h-screen bg-[#f7f7f5] px-4 pb-16 pt-28 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[#f7f7f5] px-4 pb-16 mt-32 lg:mt-20 md:mt-32">
 
       {/* Background decoration */}
       <div className="pointer-events-none fixed left-1/2 top-20 -z-0 h-72 w-72 -translate-x-1/2 rounded-full bg-amber-400/10 blur-3xl" />

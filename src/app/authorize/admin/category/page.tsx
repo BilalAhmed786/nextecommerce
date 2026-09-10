@@ -257,7 +257,7 @@ export default function CategoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f7f5] px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#f7f7f5] mt-32 lg:mt-20 md:mt-32 p-5">
 
       <div className="max-w-7xl mx-auto">
 
