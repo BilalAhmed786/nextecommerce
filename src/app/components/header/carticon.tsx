@@ -1,79 +1,115 @@
 'use client';
-import React, { useEffect, useState } from 'react';
-import { HiShoppingCart, HiUser } from 'react-icons/hi';
-import { FiLogOut } from 'react-icons/fi';
-import Link from 'next/link';
-import { useSession } from 'next-auth/react';
-import { signOut } from 'next-auth/react';
 
+import { useEffect, useState } from "react";
+import { HiShoppingCart, HiUser } from "react-icons/hi";
+import { FiLogOut, FiChevronDown } from "react-icons/fi";
+import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 
 const Cart = () => {
   const [cartLength, setCartLength] = useState(0);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   useEffect(() => {
-
-    const stored = localStorage.getItem('cart');
-    const cart = stored ? JSON.parse(stored) : [];
-    setCartLength(cart.length);
-
-
-    const handleCartChange = () => {
-      const stored = localStorage.getItem('cart');
-      const cart = stored ? JSON.parse(stored) : [];
-      setCartLength(cart.length);
+    const updateCartCount = () => {
+      try {
+        const stored = localStorage.getItem("cart");
+        const cart = stored ? JSON.parse(stored) : [];
+        setCartLength(Array.isArray(cart) ? cart.length : 0);
+      } catch {
+        setCartLength(0);
+      }
     };
 
-    window.addEventListener('cartChanged', handleCartChange);
+    updateCartCount();
+
+    window.addEventListener("cartChanged", updateCartCount);
 
     return () => {
-      window.removeEventListener('cartChanged', handleCartChange);
+      window.removeEventListener("cartChanged", updateCartCount);
     };
   }, []);
 
   return (
+    <div className="flex items-center gap-3">
 
-    <div className='flex gap-3'>
-      {!session?.user.id ?
-        <div className="relative group hidden lg:block md:hidden">
-          <div className="hover:scale-110 text-[25px] hover:text-green-200 transition-transform duration-200">
-            <HiUser />
-          </div>
-          <div className="hidden absolute top-6.5 -left-7 group-hover:block z-50 transition-all duration-300">
-            <ul className="bg-white w-[100px] text-black text-[15px] font-extralight shadow-md">
-              <li className="text-center p-2 border-b border-gray-300">
-                <Link href="/login">Login</Link>
-              </li>
-              <li className="text-center p-2">
-                <Link href="/register">Register</Link>
-              </li>
-            </ul>
+      {/* Account */}
+      {!session?.user?.id ? (
+        <div className="group relative hidden lg:block">
+
+          <button
+            type="button"
+            className="flex h-10 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 text-gray-300 transition-all duration-300 hover:border-amber-400/40 hover:bg-amber-500/10 hover:text-amber-300"
+          >
+            <HiUser className="text-lg" />
+
+            <span className="text-xs font-medium">
+              Account
+            </span>
+
+            <FiChevronDown className="text-xs transition-transform duration-300 group-hover:rotate-180" />
+          </button>
+
+          {/* Dropdown */}
+          <div className="invisible absolute right-0 top-12 z-[100] w-44 translate-y-2 rounded-2xl border border-white/10 bg-[#151515] p-2 opacity-0 shadow-2xl shadow-black/40 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+
+            <div className="mb-1 px-3 py-2">
+              <p className="text-[10px] uppercase tracking-widest text-amber-400">
+                Welcome
+              </p>
+
+              <p className="mt-1 text-xs text-gray-400">
+                Sign in to your account
+              </p>
+            </div>
+
+            <Link
+              href="/login"
+              className="block rounded-xl px-3 py-2.5 text-sm text-gray-300 transition hover:bg-white/5 hover:text-white"
+            >
+              Login
+            </Link>
+
+            <Link
+              href="/register"
+              className="block rounded-xl px-3 py-2.5 text-sm text-gray-300 transition hover:bg-white/5 hover:text-white"
+            >
+              Register
+            </Link>
           </div>
         </div>
-        :
-        <div
-          className="hover:scale-110 hidden md:hidden lg:block mt-0.5 text-[20px] hover:text-green-200 transition-transform duration-200"
-          onClick={() => signOut({ callbackUrl: '/login'})}
+      ) : (
+        <button
+          type="button"
+          onClick={() => signOut({ callbackUrl: "/login" })}
+          className="hidden h-10 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 text-gray-300 transition-all duration-300 hover:border-red-400/30 hover:bg-red-500/10 hover:text-red-300 lg:flex"
         >
-          <FiLogOut />
-        </div>
+          <FiLogOut className="text-sm" />
+          <span className="text-xs font-medium">
+            Logout
+          </span>
+        </button>
+      )}
 
-      }
+      {/* Cart */}
+      <Link
+        href="/cart"
+        aria-label="Shopping cart"
+        className="group relative"
+      >
+        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-all duration-300 group-hover:border-amber-400/50 group-hover:bg-amber-500/10">
 
+          <HiShoppingCart className="text-[21px] text-gray-200 transition-all duration-300 group-hover:scale-110 group-hover:text-amber-400" />
 
-      <Link href={'/cart'}>
-        <div className="relative top-0.5 z-50 hover:scale-110 hover:text-green-200 transition-transform duration-200">
-          <HiShoppingCart size={24} />
           {cartLength > 0 && (
-            <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
-              {cartLength}
+            <span className="absolute -right-1 -top-1 flex min-h-[19px] min-w-[19px] items-center justify-center rounded-full border-2 border-[#0b0b0b] bg-amber-500 px-1 text-[9px] font-bold text-black shadow-lg shadow-amber-500/30">
+              {cartLength > 99 ? "99+" : cartLength}
             </span>
           )}
         </div>
       </Link>
-
     </div>
-  )
+  );
 };
 
 export default Cart;

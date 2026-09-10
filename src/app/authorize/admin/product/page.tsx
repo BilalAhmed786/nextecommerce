@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useRef } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { get_category, create_poroduct } from "@/app/graphql/product";
@@ -6,257 +7,356 @@ import { prodCategory } from "../../../types/layouttype";
 import axios from "axios";
 
 export default function ProductForm() {
-  const [formValues, setFormValues] = useState({
-    name: "",
-    description: "",
-    price: 1,
-    stock: 1,
-    categoryId: "",
+const [formValues, setFormValues] = useState({
+name: "",
+description: "",
+price: 1,
+stock: 1,
+categoryId: "",
+});
+
+const [mainImageFile, setMainImageFile] = useState<File | null>(null);
+const [imagesFiles, setImagesFiles] = useState<File[]>([]);
+const [validation, setValid] = useState("");
+
+const mainImageInputRef = useRef<HTMLInputElement | null>(null);
+const otherImagesInputRef = useRef<HTMLInputElement | null>(null);
+
+const { data } = useQuery<{ categories: prodCategory[] }>(get_category);
+const [createProduct, { loading }] = useMutation(create_poroduct);
+
+const handleInputChange = (
+e: React.ChangeEvent<
+HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+>
+) => {
+const { name, value } = e.target;
+
+setFormValues((prev) => ({
+  ...prev,
+  [name]:
+    name === "price" || name === "stock" ? Number(value) : value,
+}));
+
+
+};
+
+const handleMainImageChange = (
+e: React.ChangeEvent<HTMLInputElement>
+) => {
+const file = e.target.files?.[0];
+
+
+if (file) {
+  setMainImageFile(file);
+}
+
+
+};
+
+const handleImagesChange = (
+e: React.ChangeEvent<HTMLInputElement>
+) => {
+const files = Array.from(e.target.files || []);
+
+
+setImagesFiles((prev) => [...prev, ...files]);
+
+
+};
+
+const removeImageAtIndex = (index: number) => {
+setImagesFiles((prev) => prev.filter((_, i) => i !== index));
+
+
+if (otherImagesInputRef.current) {
+  otherImagesInputRef.current.value = "";
+}
+
+};
+
+const removeMainImage = () => {
+setMainImageFile(null);
+
+
+if (mainImageInputRef.current) {
+  mainImageInputRef.current.value = "";
+}
+
+};
+
+const handleSubmit = async (e: React.FormEvent) => {
+e.preventDefault();
+setValid("");
+
+
+if (
+  !mainImageFile ||
+  !imagesFiles.length ||
+  !formValues.name ||
+  formValues.price === 0 ||
+  formValues.stock === 0 ||
+  !formValues.description ||
+  !formValues.categoryId
+) {
+  setValid("* All fields are required");
+  return;
+}
+
+try {
+  let mainImage = null;
+
+  const mainForm = new FormData();
+  mainForm.append("image", mainImageFile);
+
+  const mainResponse = await axios.post(
+    "/api/upload/main",
+    mainForm
+  );
+
+  mainImage = mainResponse.data.image;
+
+  const imagesForm = new FormData();
+
+  imagesFiles.forEach((file) => {
+    imagesForm.append("images", file);
   });
 
-  const [mainImageFile, setMainImageFile] = useState<File | null>(null);
-  const [imagesFiles, setImagesFiles] = useState<File[]>([]);
-  const { data } = useQuery<{ categories: prodCategory[] }>(get_category);
-  const [createProduct] = useMutation(create_poroduct);
-  const [validation, setValid] = useState("");
+  const galleryResponse = await axios.post(
+    "/api/upload/images",
+    imagesForm
+  );
 
-  const mainImageInputRef = useRef<HTMLInputElement | null>(null);
-  const otherImagesInputRef = useRef<HTMLInputElement | null>(null);
+  const galleryImages = galleryResponse.data.images;
 
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormValues((prev) => ({
-      ...prev,
-      [name]: name === "price" || name === "stock" ? Number(value) : value,
-    }));
-  };
+  const { data } = await createProduct({
+    variables: {
+      input: {
+        ...formValues,
+        image: mainImage?.url || "",
+        imagePublicId: mainImage?.publicId || null,
+        images: galleryImages.map((img: any) => ({
+          url: img.url,
+          publicId: img.publicId,
+        })),
+      },
+    },
+  });
 
-  const handleMainImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setMainImageFile(file);
-    }
-  };
+  setValid(data.createProduct.message);
+} catch (error) {
+  console.error(error);
+  setValid("Failed to create product.");
+}
 
-  const handleImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    setImagesFiles([...imagesFiles, ...files]);
-  };
 
-  const removeImageAtIndex = (index: number) => {
-    const newFiles = imagesFiles.filter((_, i) => i !== index);
-    setImagesFiles(newFiles);
-    if (otherImagesInputRef.current) {
-      otherImagesInputRef.current.value = "";
-    }
-  };
+};
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+return ( <div className="min-h-screen bg-[#f7f7f5] px-4 py-10"> <form
+     onSubmit={handleSubmit}
+     className="mx-auto w-full max-w-4xl"
+   > <div className="mb-10 border-b border-gray-200 pb-6"> <p className="mb-2 text-sm font-medium uppercase tracking-[0.25em] text-amber-600">
+Product Management </p>
 
-    if (
-      !mainImageFile ||
-      !imagesFiles.length ||
-      !formValues.name ||
-      formValues.price === 0 ||
-      formValues.stock === 0 ||
-      !formValues.description ||
-      !formValues.categoryId
-    ) {
-      setValid("*All fields required");
-      return;
-    }
 
-    try {
-      // Upload main image
-      let mainImage: { url: string; publicId: string } | null = null;
-      if (mainImageFile) {
-        const mainForm = new FormData();
-        mainForm.append("image", mainImageFile);
-        const { data } = await axios.post("/api/upload/main", mainForm);
-        mainImage = data.image; 
-      }
+      <h1 className="text-3xl font-bold tracking-tight text-[#111]">
+        Create Product
+      </h1>
 
-      // Upload gallery images
-      let galleryImages: { url: string; publicId: string }[] = [];
-      if (imagesFiles.length > 0) {
-        const imagesForm = new FormData();
-        imagesFiles.forEach((file) => imagesForm.append("images", file));
-        const { data } = await axios.post("/api/upload/images", imagesForm);
-        galleryImages = data.images; 
-      }
+      <p className="mt-2 text-sm text-gray-500">
+        Add a new product to your store.
+      </p>
+    </div>
 
-      // Now send all to GraphQL
-      const { data } = await createProduct({
-        variables: {
-          input: {
-            ...formValues,
-            image: mainImage?.url || "",
-            imagePublicId: mainImage?.publicId || null,
-            images: galleryImages.map((img) => ({
-              url: img.url,
-              publicId: img.publicId,
-            })),
-          },
-        },
-      });
-
-      setValid(data.createProduct.message);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to create product.");
-    }
-  };
-
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4 p-6 w-[80%] rounded mx-auto mt-20"
-    >
-      <h2 className="text-xl font-semibold mb-4 text-center">Create Product</h2>
-
+    <div className="space-y-8">
       <div>
-        <label className="block font-medium">Name</label>
+        <label className="mb-2 block text-sm font-semibold text-[#111]">
+          Product Name
+        </label>
+
         <input
           type="text"
           name="name"
           value={formValues.name}
           onChange={handleInputChange}
-          className="w-full border px-3 py-2 rounded"
+          placeholder="Enter product name"
+          className="w-full border-b-2 border-gray-200 bg-transparent px-1 py-3 text-[#111] outline-none transition focus:border-amber-600"
         />
       </div>
 
       <div>
-        <label className="block font-medium">Description</label>
+        <label className="mb-2 block text-sm font-semibold text-[#111]">
+          Description
+        </label>
+
         <textarea
           name="description"
           value={formValues.description}
           onChange={handleInputChange}
-          rows={3}
-          className="w-full border px-3 py-2 rounded"
+          rows={4}
+          placeholder="Describe your product..."
+          className="w-full resize-none border-b-2 border-gray-200 bg-transparent px-1 py-3 text-[#111] outline-none transition focus:border-amber-600"
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
         <div>
-          <label className="block font-medium">Price</label>
+          <label className="mb-2 block text-sm font-semibold text-[#111]">
+            Price
+          </label>
+
           <input
             type="number"
             name="price"
             value={formValues.price}
             onChange={handleInputChange}
             step="0.01"
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border-b-2 border-gray-200 bg-transparent px-1 py-3 text-[#111] outline-none transition focus:border-amber-600"
           />
         </div>
 
         <div>
-          <label className="block font-medium">Stock</label>
+          <label className="mb-2 block text-sm font-semibold text-[#111]">
+            Stock
+          </label>
+
           <input
             type="number"
             name="stock"
             value={formValues.stock}
             onChange={handleInputChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border-b-2 border-gray-200 bg-transparent px-1 py-3 text-[#111] outline-none transition focus:border-amber-600"
           />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-semibold text-[#111]">
+            Category
+          </label>
+
+          <select
+            name="categoryId"
+            value={formValues.categoryId}
+            onChange={handleInputChange}
+            className="w-full border-b-2 border-gray-200 bg-transparent px-1 py-3 text-[#111] outline-none transition focus:border-amber-600"
+          >
+            <option value="">Select category</option>
+
+            {data?.categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
       <div>
-        <label className="block font-medium">Category</label>
-        <select
-          name="categoryId"
-          value={formValues.categoryId}
-          onChange={handleInputChange}
-          className="w-[40%] border px-1 py-2 rounded"
-        >
-          <option value="">Select a category</option>
-          {data?.categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
-      </div>
+        <label className="mb-3 block text-sm font-semibold text-[#111]">
+          Main Image
+        </label>
 
-      <div>
-        <label className="block font-medium">Main Image</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleMainImageChange}
-          className="block mt-1"
-          ref={mainImageInputRef}
-        />
-        {mainImageFile && (
-          <div className="mt-2 flex items-center gap-2">
+        {!mainImageFile ? (
+          <label className="flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-white transition hover:border-amber-500 hover:bg-amber-50/30">
+            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-2xl text-amber-600">
+              +
+            </div>
+
+            <span className="font-semibold text-[#111]">
+              Upload main image
+            </span>
+
+            <span className="mt-1 text-sm text-gray-400">
+              PNG, JPG or WEBP
+            </span>
+
+            <input
+              ref={mainImageInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleMainImageChange}
+              className="hidden"
+            />
+          </label>
+        ) : (
+          <div className="relative w-fit">
             <img
               src={URL.createObjectURL(mainImageFile)}
               alt="Main Preview"
-              className="h-24 w-24 object-cover rounded"
+              className="h-56 w-56 rounded-2xl object-cover shadow-lg"
             />
+
             <button
               type="button"
-              onClick={() => {
-                setMainImageFile(null);
-                if (mainImageInputRef.current) {
-                  mainImageInputRef.current.value = "";
-                }
-              }}
-              className="text-red-500 hover:underline text-sm"
+              onClick={removeMainImage}
+              className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-black/80 text-sm text-white transition hover:bg-red-600"
             >
-              x
+              ×
             </button>
           </div>
         )}
       </div>
 
       <div>
-        <label className="block font-medium">Other Images</label>
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handleImagesChange}
-          className="block mt-1"
-          ref={otherImagesInputRef}
-        />
+        <label className="mb-3 block text-sm font-semibold text-[#111]">
+          Gallery Images
+        </label>
+
+        <label className="flex cursor-pointer items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-4 transition hover:border-amber-500">
+          <span className="font-medium text-gray-700">
+            + Add gallery images
+          </span>
+
+          <input
+            ref={otherImagesInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImagesChange}
+            className="hidden"
+          />
+        </label>
+
         {imagesFiles.length > 0 && (
-          <div className="flex gap-2 mt-2 flex-wrap">
-            {imagesFiles.map((img, idx) => (
-              <div key={idx} className="relative">
+          <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
+            {imagesFiles.map((img, index) => (
+              <div key={index} className="group relative">
                 <img
                   src={URL.createObjectURL(img)}
-                  alt={`Preview ${idx}`}
-                  className="h-20 w-20 object-cover rounded"
+                  alt={`Gallery ${index + 1}`}
+                  className="h-32 w-full rounded-xl object-cover"
                 />
+
                 <button
                   type="button"
-                  onClick={() => removeImageAtIndex(idx)}
-                  className="absolute top-[-8px] right-[-8px] bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                  onClick={() => removeImageAtIndex(index)}
+                  className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/80 text-xs text-white opacity-0 transition group-hover:opacity-100 hover:bg-red-600"
                 >
-                  ✕
+                  ×
                 </button>
               </div>
             ))}
           </div>
         )}
       </div>
-      {validation ? (
-        <div className="text-red-500 text-center">{validation}</div>
-      ) : (
-        ""
+
+      {validation && (
+        <div className="border-l-4 border-amber-600 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+          {validation}
+        </div>
       )}
-      <button
-        type="submit"
-        className="block m-auto bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-700"
-      >
-        Submit
-      </button>
-    </form>
-  );
+
+      <div className="flex justify-end border-t border-gray-200 pt-6">
+        <button
+          type="submit"
+          disabled={loading}
+          className="min-w-[160px] rounded-xl bg-[#111] px-7 py-3.5 font-semibold text-white transition hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {loading ? "Creating..." : "Create Product"}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+);
 }

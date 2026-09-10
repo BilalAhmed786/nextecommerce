@@ -1,103 +1,176 @@
 'use client';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { HiOutlineMenuAlt3, HiOutlineX } from 'react-icons/hi';
-import { signOut, useSession } from 'next-auth/react';
+
+import Link from "next/link";
+import { useState } from "react";
+import {
+  HiOutlineMenuAlt3,
+  HiOutlineX,
+  HiShoppingBag,
+  HiOutlineLogout,
+  HiOutlineUser,
+} from "react-icons/hi";
+import { signOut, useSession } from "next-auth/react";
 
 const MobileNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: session, status } = useSession();
-  const [mounted, setMounted] = useState(false);
+  const { data: session } = useSession();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null; 
+  const closeMenu = () => {
+    setIsOpen(false);
+  };
 
   return (
-    <nav className="lg:hidden relative">
-   
-      <div className="absolute text-center w-full -top-6">
+    <nav className="relative lg:hidden">
+
+      {/* Mobile bar */}
+      <div className="flex h-12 items-center justify-center border-t border-white/10">
+
         <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="text-2xl text-center focus:outline-none"
+          type="button"
+          onClick={() => setIsOpen((prev) => !prev)}
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-xl text-gray-200 transition-all duration-300 hover:border-amber-400/40 hover:bg-amber-500/10 hover:text-amber-400"
         >
           {isOpen ? <HiOutlineX /> : <HiOutlineMenuAlt3 />}
         </button>
       </div>
 
+      {/* Backdrop */}
       <div
-        className={`absolute w-full z-50 p-5 flex flex-col justify-center items-center bg-white mt-4 top-0 left-0
-          space-y-6 transition-all duration-300 ease-in-out ${
-            isOpen
-              ? 'max-h-96 opacity-100'
-              : 'max-h-0 opacity-0 pointer-events-none'
-          }`}
-          onClick={() => setIsOpen(!isOpen)}
+        className={`fixed inset-0 z-[90] bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
+          isOpen
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0"
+        }`}
+        onClick={closeMenu}
+      />
+
+      {/* Mobile drawer */}
+      <div
+        className={`absolute left-0 top-12 z-[100] w-full overflow-hidden border-t border-white/10 bg-[#111111] shadow-2xl shadow-black/40 transition-all duration-300 ${
+          isOpen
+            ? "max-h-[650px] translate-y-0 opacity-100"
+            : "pointer-events-none max-h-0 -translate-y-3 opacity-0"
+        }`}
       >
-        <Link
-          href="/"
-          className="w-full text-center border-b border-gray-300 pb-2 text-gray-700 hover:text-black"
-        >
-          Shop
-        </Link>
-        <Link
-          href="/checkout"
-          className="w-full text-center border-b border-gray-300 pb-2 text-gray-700 hover:text-black"
-        >
-          Checkout
-        </Link>
-        <Link
-          href="/cart"
-          className="w-full text-center border-b border-gray-300 pb-2 text-gray-700 hover:text-black"
-        >
-          Cart
-        </Link>
 
-        {/* Dashboard (based on role) */}
-        {session?.user?.role === 'ADMIN' && (
+        {/* Drawer header */}
+        <div className="border-b border-white/10 px-6 py-5">
+
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400">
+              <HiShoppingBag className="text-xl" />
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-400">
+                Thrifters
+              </p>
+
+              <p className="text-sm text-gray-400">
+                Explore our collection
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Links */}
+        <div className="space-y-1 p-4">
+
           <Link
-            href="/authorize/admin/dashboard"
-            className="w-full text-center border-b border-gray-300 pb-2 text-gray-700 hover:text-black"
+            href="/"
+            onClick={closeMenu}
+            className="group flex items-center justify-between rounded-xl px-4 py-3.5 text-sm font-medium text-gray-300 transition-all duration-200 hover:bg-white/5 hover:text-amber-400"
           >
-            Dashboard
+            <span>Shop</span>
+            <span className="text-gray-600 transition group-hover:translate-x-1 group-hover:text-amber-400">
+              →
+            </span>
           </Link>
-        )}
 
-        {session?.user?.role === 'CUSTOMER' && (
           <Link
-            href="/authorize/client/dashboard"
-            className="text-center border-b border-gray-300 pb-2 text-gray-700 hover:text-black"
+            href="/cart"
+            onClick={closeMenu}
+            className="group flex items-center justify-between rounded-xl px-4 py-3.5 text-sm font-medium text-gray-300 transition-all duration-200 hover:bg-white/5 hover:text-amber-400"
           >
-            Dashboard
+            <span>Cart</span>
+            <span className="text-gray-600 transition group-hover:translate-x-1 group-hover:text-amber-400">
+              →
+            </span>
           </Link>
-        )}
 
-        {/* Auth Links */}
-        {!session?.user?.id ? (
-          <>
-            <Link
-              href="/login"
-              className="w-full text-center border-b border-gray-300 pb-2 text-gray-700 hover:text-black"
-            >
-              Login
-            </Link>
-            <Link
-              href="/register"
-              className="w-full text-center border-b border-gray-300 pb-2 text-gray-700 hover:text-black"
-            >
-              Register
-            </Link>
-          </>
-        ) : (
-          <button
-            onClick={() => signOut({ callbackUrl: '/login' })}
-            className="w-full text-center border-b border-gray-300 pb-2 text-gray-700 hover:text-black"
+          <Link
+            href="/checkout"
+            onClick={closeMenu}
+            className="group flex items-center justify-between rounded-xl px-4 py-3.5 text-sm font-medium text-gray-300 transition-all duration-200 hover:bg-white/5 hover:text-amber-400"
           >
-            Logout
-          </button>
-        )}
+            <span>Checkout</span>
+            <span className="text-gray-600 transition group-hover:translate-x-1 group-hover:text-amber-400">
+              →
+            </span>
+          </Link>
+
+          {session?.user?.role === "ADMIN" && (
+            <Link
+              href="/authorize/admin/dashboard"
+              onClick={closeMenu}
+              className="group flex items-center justify-between rounded-xl border border-amber-400/20 bg-amber-500/5 px-4 py-3.5 text-sm font-medium text-amber-300 transition-all duration-200 hover:bg-amber-500/10"
+            >
+              <span>Dashboard</span>
+              <span>→</span>
+            </Link>
+          )}
+
+          {session?.user?.role === "CUSTOMER" && (
+            <Link
+              href="/authorize/client/dashboard"
+              onClick={closeMenu}
+              className="group flex items-center justify-between rounded-xl border border-amber-400/20 bg-amber-500/5 px-4 py-3.5 text-sm font-medium text-amber-300 transition-all duration-200 hover:bg-amber-500/10"
+            >
+              <span>Dashboard</span>
+              <span>→</span>
+            </Link>
+          )}
+        </div>
+
+        {/* Authentication */}
+        <div className="border-t border-white/10 p-4">
+
+          {!session?.user?.id ? (
+            <div className="grid grid-cols-2 gap-3">
+
+              <Link
+                href="/login"
+                onClick={closeMenu}
+                className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-medium text-gray-300 transition hover:bg-white/10 hover:text-white"
+              >
+                <HiOutlineUser />
+                Login
+              </Link>
+
+              <Link
+                href="/register"
+                onClick={closeMenu}
+                className="flex items-center justify-center rounded-xl bg-amber-500 px-4 py-3 text-sm font-semibold text-black transition hover:bg-amber-400"
+              >
+                Register
+              </Link>
+
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-400/20 bg-red-500/5 px-4 py-3 text-sm font-medium text-red-300 transition hover:bg-red-500/10"
+            >
+              <HiOutlineLogout />
+              Logout
+            </button>
+          )}
+        </div>
+
+        {/* Bottom decoration */}
+        <div className="h-1 bg-linear-to-r from-transparent via-amber-500 to-transparent opacity-60" />
       </div>
     </nav>
   );

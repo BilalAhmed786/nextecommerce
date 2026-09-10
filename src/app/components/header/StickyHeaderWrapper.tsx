@@ -1,47 +1,58 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-export default function StickyHeaderWrapper({ children }: { children: React.ReactNode }) {
+export default function StickyHeaderWrapper({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [showHeader, setShowHeader] = useState(true);
   const lastScrollY = useRef(0);
+  const ticking = useRef(false);
 
   useEffect(() => {
-
-    
     const handleScroll = () => {
-      
-      const currentY = window.scrollY;
-      
+      if (ticking.current) return;
 
-      if (currentY < 100) {
-        
-        setShowHeader(true);
-      
-      } else if (currentY > lastScrollY.current) {
-     
-        setShowHeader(false);
-      } else {
-        
-        setShowHeader(true);
-      }
+      ticking.current = true;
 
-      lastScrollY.current = currentY;
+      requestAnimationFrame(() => {
+        const currentY = window.scrollY;
+
+        if (currentY <= 80) {
+          setShowHeader(true);
+        } else if (currentY > lastScrollY.current) {
+          setShowHeader(false);
+        } else {
+          setShowHeader(true);
+        }
+
+        lastScrollY.current = currentY;
+        ticking.current = false;
+      });
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   return (
     <div
-      className={`
-        w-full z-50 fixed top-0 bg-blue-600
-        transition-all duration-1000 ease-in-out transform
-        ${showHeader ? 'translate-y-0 opacity-100 shadow-md' : '-translate-y-full opacity-0'}
-      `}
+      className={`fixed z-40 left-0 top-0 w-full transform-gpu transition-all duration-300 ease-out ${
+        showHeader
+          ? "translate-y-0 opacity-100"
+          : "-translate-y-full opacity-0"
+      }`}
     >
-      {children}
+      <div className="shadow-2xl shadow-black/20">
+        {children}
+      </div>
     </div>
   );
 }
