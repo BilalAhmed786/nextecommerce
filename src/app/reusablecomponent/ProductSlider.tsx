@@ -77,7 +77,7 @@ export default function ProductSlider({ images }: Props) {
           <Slider {...settings}>
             {validImages.map((image, index) => (
               <div key={`${image}-${index}`}>
-                <div className="flex h-[380px] items-center justify-center p-6 sm:h-[450px]">
+                <div className="flex h-[280px] items-center justify-center p-6 sm:h-[450px]">
                   <InnerImageZoom
                     src={image}
                     alt={`Product image ${index + 1}`}

@@ -109,6 +109,16 @@ const MobileNavbar = () => {
               →
             </span>
           </Link>
+           <Link
+            href="/aboutus"
+            onClick={closeMenu}
+            className="group flex items-center justify-between rounded-xl px-4 py-3.5 text-sm font-medium text-gray-300 transition-all duration-200 hover:bg-white/5 hover:text-amber-400"
+          >
+            <span>Aboutus</span>
+            <span className="text-gray-600 transition group-hover:translate-x-1 group-hover:text-amber-400">
+              →
+            </span>
+          </Link>
 
           {session?.user?.role === "ADMIN" && (
             <Link

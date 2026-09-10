@@ -53,7 +53,7 @@ export default async function ProductPage({
   if (!product) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#f7f7f5] px-4">
-        <div className="text-center">
+        <div className="w-full max-w-md text-center">
           <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100 text-amber-600">
             <HiOutlineShoppingBag className="text-3xl" />
           </div>
@@ -90,37 +90,43 @@ export default async function ProductPage({
   ];
 
   return (
-    <main className="min-h-screen bg-[#f7f7f5] pb-20">
-      {/* Hero background */}
-      <section className="relative overflow-hidden">
-        {/* Decorative glows */}
-        <div className="pointer-events-none absolute -left-40 top-10 h-96 w-96 rounded-full bg-amber-400/10 blur-[100px]" />
-        <div className="pointer-events-none absolute -right-40 top-20 h-96 w-96 rounded-full bg-amber-400/10 blur-[100px]" />
+    <main className="min-h-screen overflow-x-hidden bg-[#f7f7f5] pb-12 sm:pb-20 mt-16">
 
-        <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-24 sm:px-6 lg:px-8 lg:pb-20">
+      {/* ================= HERO ================= */}
+      <section className="relative overflow-hidden">
+        {/* Background glows */}
+        <div className="pointer-events-none absolute -left-32 top-20 h-64 w-64 rounded-full bg-amber-400/10 blur-[90px] sm:-left-40 sm:h-96 sm:w-96" />
+
+        <div className="pointer-events-none absolute -right-32 top-32 h-64 w-64 rounded-full bg-amber-400/10 blur-[90px] sm:-right-40 sm:h-96 sm:w-96" />
+
+        <div className="relative mx-auto w-full max-w-7xl px-3 pt-16 sm:px-6 sm:pt-20 lg:px-8 lg:pt-24">
+
           {/* Breadcrumb */}
-          <div className="mb-8 flex items-center gap-2 text-sm text-gray-500">
+          <div className="mb-5 flex min-w-0 items-center gap-2 overflow-hidden text-xs text-gray-500 sm:mb-8 sm:text-sm">
             <Link
               href="/"
-              className="transition-colors hover:text-amber-600"
+              className="shrink-0 transition-colors hover:text-amber-600"
             >
               Shop
             </Link>
 
-            <span>/</span>
+            <span className="shrink-0">/</span>
 
-            <span className="max-w-[220px] truncate text-gray-900">
+            <span className="min-w-0 truncate text-gray-900">
               {product.name}
             </span>
           </div>
 
-          {/* Main product card */}
-          <div className="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-gray-200/50">
-            <div className="grid lg:grid-cols-2">
-              {/* ================= IMAGE SIDE ================= */}
-              <div className="relative min-h-[480px] bg-[#f1f1ee] p-5 sm:p-8 lg:min-h-[650px]">
-                {/* Product badge */}
-                <div className="absolute left-7 top-7 z-10 flex items-center gap-2 rounded-full border border-amber-300/40 bg-black px-4 py-2 text-xs font-bold uppercase tracking-wider text-amber-400 shadow-lg">
+          {/* ================= PRODUCT CONTAINER ================= */}
+          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg shadow-gray-200/40 sm:rounded-[2rem] sm:shadow-xl">
+
+            <div className="grid min-w-0 lg:grid-cols-2">
+
+              {/* ================= IMAGE ================= */}
+              <div className="relative min-w-0 overflow-hidden bg-[#f1f1ee] p-3 sm:p-6 lg:p-8">
+
+                {/* Badge */}
+                <div className="absolute left-4 top-4 z-20 flex items-center gap-1.5 rounded-full bg-black px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-400 shadow-lg sm:left-7 sm:top-7 sm:gap-2 sm:px-4 sm:py-2 sm:text-xs">
                   <HiSparkles />
                   Featured
                 </div>
@@ -128,105 +134,122 @@ export default async function ProductPage({
                 {/* Decorative circle */}
                 <div className="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-amber-400/10" />
 
-                <div className="relative flex h-full min-h-[450px] items-center justify-center">
-                  <ProductSlider images={gallery} />
+                {/* Slider wrapper */}
+                <div className="relative z-10 flex min-h-[300px] w-full items-center justify-center sm:min-h-[420px] lg:min-h-[560px]">
+                  <div className="w-full max-w-full">
+                    <ProductSlider images={gallery} />
+                  </div>
                 </div>
               </div>
 
-              {/* ================= DETAILS SIDE ================= */}
-              <div className="flex flex-col justify-center p-7 sm:p-10 lg:p-14">
-                {/* Small label */}
-                <p className="mb-4 text-xs font-bold uppercase tracking-[0.25em] text-amber-600">
+              {/* ================= DETAILS ================= */}
+              <div className="min-w-0 p-5 sm:p-8 md:p-10 lg:flex lg:flex-col lg:justify-center lg:p-12 xl:p-14">
+
+                {/* Brand */}
+                <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-amber-600 sm:mb-4 sm:text-xs sm:tracking-[0.25em]">
                   Thrifter&apos;s Point
                 </p>
 
                 {/* Product name */}
-                <h1 className="max-w-xl text-3xl font-black leading-tight tracking-tight text-gray-950 sm:text-4xl lg:text-5xl">
+                <h1 className="break-words text-2xl font-black leading-tight tracking-tight text-gray-950 sm:text-4xl lg:text-5xl">
                   {product.name}
                 </h1>
 
                 {/* Description */}
-                <p className="mt-6 max-w-xl text-sm leading-7 text-gray-500 sm:text-base">
+                <p className="mt-4 max-w-xl text-sm leading-6 text-gray-500 sm:mt-6 sm:text-base sm:leading-7">
                   {product.description}
                 </p>
 
                 {/* Price */}
-                <div className="mt-8 flex items-end gap-3">
-                  <span className="text-4xl font-black tracking-tight text-gray-950">
-                    ${product.price}
+                <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8">
+                  <span className="text-3xl font-black tracking-tight text-gray-950 sm:text-4xl">
+                    ${Number(product.price).toFixed(2)}
                   </span>
 
-                  <span className="mb-1 rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-600">
+                  <span className="rounded-full bg-green-50 px-3 py-1 text-[10px] font-bold text-green-600 sm:text-xs">
                     Available
                   </span>
                 </div>
 
                 {/* Divider */}
-                <div className="my-8 h-px bg-gray-200" />
+                <div className="my-6 h-px bg-gray-200 sm:my-8" />
 
-                {/* Quantity + Add to cart */}
+                {/* Quantity */}
                 <div>
                   <p className="mb-3 text-sm font-semibold text-gray-900">
                     Quantity
                   </p>
 
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                    <div className="rounded-xl border border-gray-200 bg-gray-50 p-1">
+                  <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+
+                    {/* Quantity selector */}
+                    <div className="w-fit rounded-xl border border-gray-200 bg-gray-50 p-1">
                       <ProductQty product={product} />
                     </div>
 
-                    <div className="flex-1">
+                    {/* Add button */}
+                    <div className="w-full min-w-0 sm:flex-1">
                       <Shopbutton product={product} />
                     </div>
+
                   </div>
                 </div>
 
                 {/* Trust features */}
-                <div className="mt-9 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
-                    <HiOutlineTruck className="text-xl text-amber-600" />
+                <div className="mt-7 grid grid-cols-1 gap-2.5 sm:mt-9 sm:grid-cols-3 sm:gap-3">
 
-                    <p className="mt-2 text-xs font-bold text-gray-900">
-                      Fast Delivery
-                    </p>
+                  <div className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 p-3 sm:block sm:p-4">
+                    <HiOutlineTruck className="shrink-0 text-xl text-amber-600" />
 
-                    <p className="mt-1 text-[11px] text-gray-500">
-                      Quick & reliable
-                    </p>
+                    <div>
+                      <p className="text-xs font-bold text-gray-900">
+                        Fast Delivery
+                      </p>
+
+                      <p className="mt-0.5 text-[10px] text-gray-500 sm:mt-1 sm:text-[11px]">
+                        Quick & reliable
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
-                    <HiOutlineShieldCheck className="text-xl text-amber-600" />
+                  <div className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 p-3 sm:block sm:p-4">
+                    <HiOutlineShieldCheck className="shrink-0 text-xl text-amber-600" />
 
-                    <p className="mt-2 text-xs font-bold text-gray-900">
-                      Secure Payment
-                    </p>
+                    <div>
+                      <p className="text-xs font-bold text-gray-900">
+                        Secure Payment
+                      </p>
 
-                    <p className="mt-1 text-[11px] text-gray-500">
-                      100% protected
-                    </p>
+                      <p className="mt-0.5 text-[10px] text-gray-500 sm:mt-1 sm:text-[11px]">
+                        100% protected
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
-                    <HiOutlineRefresh className="text-xl text-amber-600" />
+                  <div className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 p-3 sm:block sm:p-4">
+                    <HiOutlineRefresh className="shrink-0 text-xl text-amber-600" />
 
-                    <p className="mt-2 text-xs font-bold text-gray-900">
-                      Easy Returns
-                    </p>
+                    <div>
+                      <p className="text-xs font-bold text-gray-900">
+                        Easy Returns
+                      </p>
 
-                    <p className="mt-1 text-[11px] text-gray-500">
-                      Shop with confidence
-                    </p>
+                      <p className="mt-0.5 text-[10px] text-gray-500 sm:mt-1 sm:text-[11px]">
+                        Shop with confidence
+                      </p>
+                    </div>
                   </div>
+
                 </div>
               </div>
             </div>
 
-            {/* Bottom guarantee strip */}
-            <div className="border-t border-gray-200 bg-[#111111] px-6 py-5 sm:px-10">
-              <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+            {/* ================= GUARANTEE ================= */}
+            <div className="border-t border-gray-200 bg-[#111111] px-4 py-4 sm:px-8 sm:py-5">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-400/10 text-amber-400">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-400/10 text-amber-400">
                     <HiOutlineShieldCheck className="text-lg" />
                   </div>
 
@@ -235,54 +258,64 @@ export default async function ProductPage({
                       Shop with confidence
                     </p>
 
-                    <p className="text-[11px] text-gray-500">
+                    <p className="text-[10px] text-gray-500 sm:text-[11px]">
                       Your satisfaction is our priority
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs text-gray-500">
+                <div className="flex items-center gap-2 pl-12 text-[10px] text-gray-500 sm:pl-0 sm:text-xs">
                   <span className="h-2 w-2 rounded-full bg-green-400" />
                   Product available
                 </div>
+
               </div>
             </div>
+
           </div>
         </div>
       </section>
 
       {/* ================= FEATURED PRODUCTS ================= */}
       {featuredproducts.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
-          <div className="mb-8 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.25em] text-amber-600">
+        <section className="mx-auto w-full max-w-7xl px-3 pt-12 sm:px-6 sm:pt-16 lg:px-8">
+
+          <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
+
+            <div className="min-w-0">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-600 sm:text-xs sm:tracking-[0.25em]">
                 You may also like
               </p>
 
-              <h2 className="mt-2 text-3xl font-black tracking-tight text-gray-950">
+              <h2 className="mt-1.5 text-2xl font-black tracking-tight text-gray-950 sm:mt-2 sm:text-3xl">
                 More to Explore
               </h2>
 
-              <p className="mt-2 text-sm text-gray-500">
+              <p className="mt-1.5 text-xs text-gray-500 sm:mt-2 sm:text-sm">
                 Discover more products from our collection.
               </p>
             </div>
 
             <Link
               href="/"
-              className="group inline-flex items-center gap-2 text-sm font-semibold text-gray-700 transition-colors hover:text-amber-600"
+              className="group inline-flex w-fit items-center gap-2 text-xs font-semibold text-gray-700 transition-colors hover:text-amber-600 sm:text-sm"
             >
               View all
+
               <span className="transition-transform duration-300 group-hover:translate-x-1">
                 →
               </span>
             </Link>
+
           </div>
 
-          <MultiProductSlider products={featuredproducts} />
+          <div className="w-full min-w-0 overflow-hidden">
+            <MultiProductSlider products={featuredproducts} />
+          </div>
+
         </section>
       )}
+
     </main>
   );
 }
