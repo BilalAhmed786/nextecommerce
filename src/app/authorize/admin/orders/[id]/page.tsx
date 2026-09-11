@@ -126,7 +126,7 @@ return ( <div className="min-h-screen bg-[#f5f5f3] p-4 mt-28 lg:mt-20 sm:mt-28">
           Order Details
         </div>
 
-        <h1 className="text-3xl font-black tracking-tight text-[#111] md:text-4xl">
+        <h1 className="text-3xl font-black tracking-tight text-[#111] md:text-4xl truncate">
           #{order.id}
         </h1>
 
